@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS completed_routes;
+DROP TABLE IF EXISTS routes;
+DROP TABLE IF EXISTS applications;
+DROP TABLE IF EXISTS destinations;
+DROP TABLE IF EXISTS cargo_types;
+DROP TABLE IF EXISTS drivers;
+DROP TABLE IF EXISTS cars;
