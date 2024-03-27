@@ -1,7 +1,6 @@
 package com.ua.project.Autobase.dao.driverDAO;
 
 import com.ua.project.Autobase.AppStarter;
-import com.ua.project.Autobase.model.Car;
 import com.ua.project.Autobase.model.Driver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +66,7 @@ public class DriverDaoImp implements DriverDao {
     @Override
     public int[] saveMany(List<Driver> items) {
         try {
-            return jdbcTemplate.batchUpdate(UPDATE_DRIVER, new BatchPreparedStatementSetter() {
+            return jdbcTemplate.batchUpdate(INSERT_DRIVER, new BatchPreparedStatementSetter() {
                 @Override
                 public void setValues(PreparedStatement ps, int i) throws SQLException {
                     ps.setString(1, items.get(i).getFirstName());

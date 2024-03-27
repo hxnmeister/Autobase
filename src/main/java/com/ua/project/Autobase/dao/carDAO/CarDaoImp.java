@@ -66,7 +66,7 @@ public class CarDaoImp implements CarDao {
     @Override
     public int[] saveMany(List<Car> items) {
         try {
-            return jdbcTemplate.batchUpdate(UPDATE_CAR, new BatchPreparedStatementSetter() {
+            return jdbcTemplate.batchUpdate(INSERT_CAR, new BatchPreparedStatementSetter() {
                 @Override
                 public void setValues(PreparedStatement ps, int i) throws SQLException {
                     ps.setString(1, items.get(i).getModel());
