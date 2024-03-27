@@ -25,7 +25,7 @@ public class ApplicationDaoImp implements ApplicationDao {
     private RowMapper<Application> applicationRowMapper;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AppStarter.class);
-    private static final String SELECT_ALL_APPLICATIONS = """
+    private static final String SELECT_APPLICATIONS = """
         SELECT *
         FROM applications
     """;
@@ -78,7 +78,7 @@ public class ApplicationDaoImp implements ApplicationDao {
             LOGGER.info(e.getMessage());
         }
 
-        return null;
+        return new int[0];
     }
 
     @Override
@@ -95,16 +95,14 @@ public class ApplicationDaoImp implements ApplicationDao {
 
     @Override
     public List<Application> findAll() {
-        List<Application> result = new ArrayList<>();
-
         try {
-            result = jdbcTemplate.query(SELECT_ALL_APPLICATIONS, applicationRowMapper);
+            return jdbcTemplate.query(SELECT_APPLICATIONS, applicationRowMapper);
         }
         catch (DataAccessException e) {
             LOGGER.info(e.getMessage());
         }
 
-        return result;
+        return new ArrayList<>();
     }
 
     @Override

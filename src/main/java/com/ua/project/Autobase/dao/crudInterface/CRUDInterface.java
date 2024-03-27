@@ -13,7 +13,7 @@ public interface CRUDInterface <E> {
     /**
      *
      * @param items
-     * @return after exception returns null, otherwise returns array of codes from Statement
+     * @return after exception returns empty int array, otherwise returns array of codes from Statement
      */
     int[] saveMany(List<E> items);
 
