@@ -13,7 +13,6 @@ services:
     environment:
       POSTGRES_DB: autobase-db
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - autobase-db:/var/lib/postgresql/data
     ports:
       - "6767:5432"
