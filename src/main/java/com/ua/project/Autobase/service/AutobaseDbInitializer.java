@@ -149,7 +149,7 @@ public class AutobaseDbInitializer {
             drivers.add(Driver
                     .builder()
                     .firstName(firstNames.get(RANDOM.nextInt(firstNames.size())))
-                    .lastName(firstNames.get(RANDOM.nextInt(lastNames.size())))
+                    .lastName(lastNames.get(RANDOM.nextInt(lastNames.size())))
                     .earnings(MIN_ACCEPTABLE_EARNINGS.max(BigDecimal.valueOf(getRandomDoubleValueWithCoefficient(RANDOM, 1000.0))))
                     .drivingExperience(Math.max(MIN_ACCEPTABLE_EXPERIENCE, getRandomDoubleValueWithCoefficient(RANDOM, 100.0)))
                     .build());

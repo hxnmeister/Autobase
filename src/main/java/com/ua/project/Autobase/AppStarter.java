@@ -1,5 +1,6 @@
 package com.ua.project.Autobase;
 
+import com.ua.project.Autobase.menu.MenuExecutor;
 import com.ua.project.Autobase.service.AutobaseInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AppStarter {
     @Autowired
+    MenuExecutor menuExecutor;
+
+    @Autowired
     private AutobaseInitializer autobaseInitializer;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AppStarter.class);
@@ -21,6 +25,7 @@ public class AppStarter {
 
         return args -> {
           autobaseInitializer.autobaseInitialize();
+          menuExecutor.startMenu();
         };
     }
 }

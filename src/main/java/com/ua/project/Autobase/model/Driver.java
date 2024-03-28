@@ -17,4 +17,13 @@ public class Driver {
     private String lastName;
     private BigDecimal earnings;
     private double drivingExperience;
+
+    @Override
+    public String toString() {
+        return "  ID: " + id + "\n" +
+                "  " + firstName + " " + lastName + "\n" +
+                "  Earnings: " + earnings + "\n" +
+                "  Driving Experience: " + drivingExperience + "\n" +
+                "-".repeat(20);
+    }
 }
