@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class Application {
     private Long id;
     private double weight;
-    private int cargoTypeId;
+    private long cargoTypeId;
 }

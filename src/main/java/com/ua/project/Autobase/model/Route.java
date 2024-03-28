@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Route {
     private Long id;
-    private int applicationId;
-    private int driverId;
-    private int carId;
+    private long applicationId;
+    private long driverId;
+    private long carId;
 }

@@ -66,7 +66,7 @@ public class CompletedRouteDaoImp implements CompletedRouteDao {
                 public void setValues(PreparedStatement ps, int i) throws SQLException {
                     ps.setDate(1, items.get(i).getBeginDate());
                     ps.setDate(2, items.get(i).getEndDate());
-                    ps.setInt(3, items.get(i).getRouteId());
+                    ps.setLong(3, items.get(i).getRouteId());
                 }
 
                 @Override

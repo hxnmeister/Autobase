@@ -15,5 +15,5 @@ public class CompletedRoute {
     private Long id;
     private Date beginDate;
     private Date endDate;
-    private int routeId;
+    private long routeId;
 }

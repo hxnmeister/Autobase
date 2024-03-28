@@ -64,9 +64,9 @@ public class RouteDaoImp implements RouteDao {
             return jdbcTemplate.batchUpdate(INSERT_ROUTE, new BatchPreparedStatementSetter() {
                 @Override
                 public void setValues(PreparedStatement ps, int i) throws SQLException {
-                    ps.setInt(1, routes.get(i).getApplicationId());
-                    ps.setInt(2, routes.get(i).getDriverId());
-                    ps.setInt(3, routes.get(i).getCarId());
+                    ps.setLong(1, routes.get(i).getApplicationId());
+                    ps.setLong(2, routes.get(i).getDriverId());
+                    ps.setLong(3, routes.get(i).getCarId());
                 }
 
                 @Override

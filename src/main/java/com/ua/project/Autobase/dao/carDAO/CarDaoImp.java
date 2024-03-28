@@ -31,7 +31,7 @@ public class CarDaoImp implements CarDao {
     """;
     private static final String INSERT_CAR = """
         INSERT INTO cars(model, condition, is_on_service, manufacturer, load_capacity)
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (?, ?, '0', ?, ?)
     """;
     private static final String UPDATE_CAR = """
         UPDATE cars
@@ -52,7 +52,6 @@ public class CarDaoImp implements CarDao {
             return jdbcTemplate.update(INSERT_CAR,
                     item.getModel(),
                     item.getCondition(),
-                    item.isOnService(),
                     item.getManufacturer(),
                     item.getLoadCapacity());
         }
@@ -71,9 +70,8 @@ public class CarDaoImp implements CarDao {
                 public void setValues(PreparedStatement ps, int i) throws SQLException {
                     ps.setString(1, items.get(i).getModel());
                     ps.setInt(2, items.get(i).getCondition());
-                    ps.setBoolean(3, items.get(i).isOnService());
-                    ps.setString(4, items.get(i).getManufacturer());
-                    ps.setDouble(5, items.get(i).getLoadCapacity());
+                    ps.setString(3, items.get(i).getManufacturer());
+                    ps.setDouble(4, items.get(i).getLoadCapacity());
                 }
 
                 @Override

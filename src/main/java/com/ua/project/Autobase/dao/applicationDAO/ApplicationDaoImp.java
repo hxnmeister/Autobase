@@ -65,7 +65,7 @@ public class ApplicationDaoImp implements ApplicationDao {
                 @Override
                 public void setValues(PreparedStatement ps, int i) throws SQLException {
                     ps.setDouble(1, items.get(i).getWeight());
-                    ps.setInt(2, items.get(i).getCargoTypeId());
+                    ps.setLong(2, items.get(i).getCargoTypeId());
                 }
 
                 @Override
