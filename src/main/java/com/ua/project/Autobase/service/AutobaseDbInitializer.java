@@ -1,16 +1,8 @@
 package com.ua.project.Autobase.service;
 
-import com.ua.project.Autobase.dao.applicationDAO.ApplicationDao;
-import com.ua.project.Autobase.dao.carDAO.CarDao;
 import com.ua.project.Autobase.dao.cargo_typeDAO.CargoTypeDao;
-import com.ua.project.Autobase.dao.completed_routeDAO.CompletedRouteDao;
-import com.ua.project.Autobase.dao.destinationDAO.DestinationDao;
-import com.ua.project.Autobase.dao.driverDAO.DriverDao;
-import com.ua.project.Autobase.dao.routeDAO.RouteDao;
 import com.ua.project.Autobase.model.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
@@ -19,10 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class AutobaseDbInitializer {
     @Value("${data.car.manufacturers}")
     private String pathToCarManufacturers;
@@ -45,30 +37,14 @@ public class AutobaseDbInitializer {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private CarDao carDao;
-    private RouteDao routeDao;
-    private DriverDao driverDao;
-    private CargoTypeDao cargoTypeDao;
-    private ApplicationDao applicationDao;
-    private DestinationDao destinationDao;
-    private CompletedRouteDao completedRouteDao;
+    private final CarDao carDao;
+    private final RouteDao routeDao;
+    private final DriverDao driverDao;
+    private final CargoTypeDao cargoTypeDao;
+    private final ApplicationDao applicationDao;
+    private final DestinationDao destinationDao;
+    private final CompletedRouteDao completedRouteDao;
     private static final Random RANDOM = new Random();
-
-    public AutobaseDbInitializer(CarDao carDao,
-                                 RouteDao routeDao,
-                                 DriverDao driverDao,
-                                 CargoTypeDao cargoTypeDao,
-                                 ApplicationDao applicationDao,
-                                 DestinationDao destinationDao,
-                                 CompletedRouteDao completedRouteDao) {
-        this.carDao = carDao;
-        this.routeDao = routeDao;
-        this.driverDao = driverDao;
-        this.cargoTypeDao = cargoTypeDao;
-        this.applicationDao = applicationDao;
-        this.destinationDao = destinationDao;
-        this.completedRouteDao = completedRouteDao;
-    }
 
     public void dropTables() {
         executeCreateOrDropQuery(pathToDropTables);

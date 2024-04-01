@@ -1,20 +1,30 @@
 package com.ua.project.Autobase.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@Table(name = "cars")
 public class Car {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "model")
     private String model;
+
+    @Column(name = "condition")
     private int condition;
+
+    @Column(name = "is_on_service")
     private boolean isOnService;
+
+    @Column(name = "manufacturer")
     private String manufacturer;
+
+    @Column(name = "load_capacity")
     private double loadCapacity;
 
     @Override

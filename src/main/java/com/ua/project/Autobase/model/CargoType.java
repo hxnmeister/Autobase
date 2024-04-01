@@ -1,20 +1,25 @@
 package com.ua.project.Autobase.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@Table(name = "cargo_types")
 public class CargoType {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "cost_per_kg")
     private BigDecimal costPerKG;
+
+    @Column(name = "required_experience")
     private double requiredExperience;
 
     @Override

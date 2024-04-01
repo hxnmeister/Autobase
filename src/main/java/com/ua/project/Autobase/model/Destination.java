@@ -1,17 +1,23 @@
 package com.ua.project.Autobase.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@Table(name = "destinations")
 public class Destination {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "distance")
     double distance;
+
+    @Column(name = "country")
     String country;
+
+    @Column(name = "city")
     String city;
 }

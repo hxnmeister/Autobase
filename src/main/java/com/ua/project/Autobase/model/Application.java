@@ -1,29 +1,31 @@
 package com.ua.project.Autobase.model;
 
-import com.ua.project.Autobase.dao.cargo_typeDAO.CargoTypeDao;
-import com.ua.project.Autobase.dao.cargo_typeDAO.CargoTypeDaoImp;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
+import jakarta.persistence.*;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@Table(name = "applications")
 public class Application {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "weight")
     private double weight;
-    private long cargoTypeId;
+
+    @ManyToOne
+    @JoinColumn(name = "cargo_type_id", nullable = false)
+    private CargoType cargoType;
 
     @Override
     public String toString() {
         return "  ID: " + id + "\n" +
                 "  Cargo Weight: " + weight + "\n" +
-                "  Cargo Type ID: " + cargoTypeId + "\n" +
+                "  Cargo Title: " + cargoType.getTitle() + "\n" +
+                "  Cost Per KG: " + cargoType.getCostPerKG() + "$\n" +
+                "  Required Experience: " + cargoType.getRequiredExperience() + " years\n" +
                 "-".repeat(20);
     }
 }

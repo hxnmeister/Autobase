@@ -1,10 +1,7 @@
 package com.ua.project.Autobase.menu;
 
 import com.ua.project.Autobase.AppStarter;
-import com.ua.project.Autobase.dao.applicationDAO.ApplicationDao;
-import com.ua.project.Autobase.dao.carDAO.CarDao;
 import com.ua.project.Autobase.dao.cargo_typeDAO.CargoTypeDao;
-import com.ua.project.Autobase.dao.driverDAO.DriverDao;
 import com.ua.project.Autobase.model.Application;
 import com.ua.project.Autobase.model.Car;
 import com.ua.project.Autobase.model.CargoType;
