@@ -1,12 +1,18 @@
-package com.ua.project.Autobase.model;
+package com.ua.project.Autobase.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import java.sql.Date;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
 @Table(name = "completed_routes")
+@AllArgsConstructor
+@NoArgsConstructor
 public class CompletedRoute {
     @Id
     @Column(name = "id")

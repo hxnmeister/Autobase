@@ -1,11 +1,17 @@
-package com.ua.project.Autobase.model;
+package com.ua.project.Autobase.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
 @Table(name = "cars")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Car {
     @Id
     @Column(name = "id")
@@ -19,7 +25,7 @@ public class Car {
     private int condition;
 
     @Column(name = "is_on_service")
-    private boolean isOnService;
+    private int isOnService;
 
     @Column(name = "manufacturer")
     private String manufacturer;
@@ -33,7 +39,7 @@ public class Car {
                 "  Manufacturer: " + manufacturer + "\n" +
                 "  Make: " + model + "\n" +
                 "  Condition: " + condition + "%\n" +
-                "  Is On Service: " + (isOnService ? "yes" : "no") + "\n" +
+                "  Is On Service: " + (isOnService == 1 ? "yes" : "no") + "\n" +
                 "  Load Capacity: " + loadCapacity + "kg\n" +
                 "-".repeat(20);
     }

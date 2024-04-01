@@ -1,12 +1,19 @@
-package com.ua.project.Autobase.model;
+package com.ua.project.Autobase.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 
 @Data
 @Entity
+@Builder
 @Table(name = "drivers")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Driver {
     @Id
     @Column(name = "id")

@@ -1,11 +1,11 @@
-package com.ua.project.Autobase.service;
+package com.ua.project.Autobase.utils;
 
-import com.ua.project.Autobase.dao.cargo_typeDAO.CargoTypeDao;
-import com.ua.project.Autobase.model.*;
+import com.ua.project.Autobase.models.*;
+import com.ua.project.Autobase.services.TxtFileReader;
+import com.ua.project.Autobase.services.autobase_init_service.AutobaseInitService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class AutobaseDbInitializer {
@@ -25,33 +26,14 @@ public class AutobaseDbInitializer {
     @Value("${data.last_names}")
     private String pathToLastNames;
 
-    @Value("${data.createSqlTables}")
-    private String pathToCreateTables;
-
-    @Value("${data.dropSqlTables}")
-    private String pathToDropTables;
-
-    @Autowired
-    private TxtFileReader txtFileReader;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    private final CarDao carDao;
-    private final RouteDao routeDao;
-    private final DriverDao driverDao;
-    private final CargoTypeDao cargoTypeDao;
-    private final ApplicationDao applicationDao;
-    private final DestinationDao destinationDao;
-    private final CompletedRouteDao completedRouteDao;
+    private final TxtFileReader txtFileReader;
+    private final JdbcTemplate jdbcTemplate;
+    private final AutobaseInitService autobaseInitService;
     private static final Random RANDOM = new Random();
 
-    public void dropTables() {
-        executeCreateOrDropQuery(pathToDropTables);
-    }
-
-    public void createTables() {
-        executeCreateOrDropQuery(pathToCreateTables);
+    public void deleteAllRowsInDB() {
+        autobaseInitService.deleteAllRowsInDB();
+        log.debug("All data from DB erased!");
     }
 
     public void createRandomCargoTypes() {
@@ -65,11 +47,11 @@ public class AutobaseDbInitializer {
                     .builder()
                     .title("CargoTypeTitle" + (i + RANDOM.nextInt(MAX_RANDOM_NUMBER)))
                     .costPerKG(BigDecimal.valueOf(RANDOM.nextDouble() * MONEY_COEFFICIENT))
-                    .requiredExperience(getRandomDoubleValueWithCoefficient(RANDOM, 100.0))
+                    .requiredExperience(getRandomDoubleValueWithCoefficient(100.0))
                     .build());
         }
 
-        cargoTypeDao.saveMany(cargoTypes);
+        autobaseInitService.saveCargoTypes(cargoTypes);
     }
 
     public void createRandomCars() throws IOException {
@@ -85,30 +67,30 @@ public class AutobaseDbInitializer {
                     .builder()
                     .model("Model" + (i + 1))
                     .condition(Math.max(RANDOM.nextInt(101), MIN_ACCEPTABLE_CONDITION))
-                    .isOnService(false)
+                    .isOnService(0)
                     .manufacturer(manufacturers.get(RANDOM.nextInt(manufacturers.size())))
-                    .loadCapacity(Math.max(getRandomDoubleValueWithCoefficient(RANDOM, 1000.0), MIN_ACCEPTABLE_WEIGHT))
+                    .loadCapacity(Math.max(getRandomDoubleValueWithCoefficient(1000.0), MIN_ACCEPTABLE_WEIGHT))
                     .build());
         }
 
-        carDao.saveMany(cars);
+        autobaseInitService.saveCars(cars);
     }
 
     public void createRandomApplications() {
         final int COUNT_OF_ITEMS_IN_LIST = 6;
         final double MIN_ACCEPTABLE_WEIGHT = 500.0;
         List<Application> applications = new ArrayList<>();
-        List<CargoType> cargoTypes = cargoTypeDao.findAll();
+        List<CargoType> cargoTypes = autobaseInitService.findAllCargoTypes();
 
         for (int i = 0; i < COUNT_OF_ITEMS_IN_LIST; i++) {
             applications.add(Application
                     .builder()
-                    .weight(Math.max(getRandomDoubleValueWithCoefficient(RANDOM, 1000.0), MIN_ACCEPTABLE_WEIGHT))
-                    .cargoTypeId(cargoTypes.get(RANDOM.nextInt(cargoTypes.size())).getId())
+                    .weight(Math.max(getRandomDoubleValueWithCoefficient(1000.0), MIN_ACCEPTABLE_WEIGHT))
+                    .cargoType(cargoTypes.get(RANDOM.nextInt(cargoTypes.size())))
                     .build());
         }
 
-        applicationDao.saveMany(applications);
+        autobaseInitService.saveApplications(applications);
     }
 
     public void createRandomDrivers() throws IOException {
@@ -126,12 +108,12 @@ public class AutobaseDbInitializer {
                     .builder()
                     .firstName(firstNames.get(RANDOM.nextInt(firstNames.size())))
                     .lastName(lastNames.get(RANDOM.nextInt(lastNames.size())))
-                    .earnings(MIN_ACCEPTABLE_EARNINGS.max(BigDecimal.valueOf(getRandomDoubleValueWithCoefficient(RANDOM, 1000.0))))
-                    .drivingExperience(Math.max(MIN_ACCEPTABLE_EXPERIENCE, getRandomDoubleValueWithCoefficient(RANDOM, 100.0)))
+                    .earnings(MIN_ACCEPTABLE_EARNINGS.max(BigDecimal.valueOf(getRandomDoubleValueWithCoefficient(1000.0))))
+                    .drivingExperience(Math.max(MIN_ACCEPTABLE_EXPERIENCE, getRandomDoubleValueWithCoefficient(100.0)))
                     .build());
         }
 
-        driverDao.saveMany(drivers);
+        autobaseInitService.saveDrivers(drivers);
     }
 
     public void createRandomDestinations() {
@@ -142,42 +124,42 @@ public class AutobaseDbInitializer {
         for (int i = 1; i <= COUNT_OF_ITEMS_IN_LIST; i++) {
             destinations.add(Destination
                     .builder()
-                    .distance(Math.max(getRandomDoubleValueWithCoefficient(RANDOM, 1000.0), MIN_ACCEPTABLE_DISTANCE))
+                    .distance(Math.max(getRandomDoubleValueWithCoefficient(1000.0), MIN_ACCEPTABLE_DISTANCE))
                     .country("Country" + i)
                     .city("City" + i)
                     .build());
         }
 
-        destinationDao.saveMany(destinations);
+        autobaseInitService.saveDestinations(destinations);
     }
 
     public void createRandomRoutes() {
         final int COUNT_OF_ITEMS_IN_LIST = 6;
-        List<Application> applications = applicationDao.findAll();
-        List<Driver> drivers = driverDao.findAll();
-        List<Car> cars = carDao.findAll();
+        List<Application> applications = autobaseInitService.findAllApplications();
+        List<Driver> drivers = autobaseInitService.findAllDrivers();
+        List<Car> cars = autobaseInitService.findAllCars();
         List<Route> routes = new ArrayList<>();
 
         for (int i = 0; i < COUNT_OF_ITEMS_IN_LIST; i++) {
             routes.add(Route
                     .builder()
-                    .applicationId(applications.get(RANDOM.nextInt(applications.size())).getId())
-                    .driverId(drivers.get(RANDOM.nextInt(drivers.size())).getId())
-                    .carId(cars.get(RANDOM.nextInt(cars.size())).getId())
+                    .application(applications.get(RANDOM.nextInt(applications.size())))
+                    .driver(drivers.get(RANDOM.nextInt(drivers.size())))
+                    .car(cars.get(RANDOM.nextInt(cars.size())))
                     .build());
         }
 
-        routeDao.saveMany(routes);
+        autobaseInitService.saveRoutes(routes);
     }
 
     public void createRandomCompletedRoutes() {
         final int COUNT_OF_ITEMS_IN_LIST = 6;
         Calendar calendar = new GregorianCalendar();
-        List<Route> routes = routeDao.findAll();
+        List<Route> routes = autobaseInitService.findAllRoutes();
         List<CompletedRoute> completedRoutes = new ArrayList<>();
 
         for (int i = 0; i < COUNT_OF_ITEMS_IN_LIST; i++) {
-            java.sql.Date beginDate = getRandomDate(RANDOM, calendar);
+            java.sql.Date beginDate = getRandomDate(calendar);
             java.sql.Date endDate = new java.sql.Date(beginDate.getTime());
             endDate.setTime(endDate.getTime() + (Math.max(RANDOM.nextInt(30), 10) * 24L * 3600L * 1000L));
 
@@ -185,41 +167,23 @@ public class AutobaseDbInitializer {
                     .builder()
                     .beginDate(beginDate)
                     .endDate(endDate)
-                    .routeId(routes.get(RANDOM.nextInt(routes.size())).getId())
+                    .route(routes.get(RANDOM.nextInt(routes.size())))
                     .build());
         }
 
-        completedRouteDao.saveMany(completedRoutes);
+        autobaseInitService.saveCompletedRoutes(completedRoutes);
     }
 
-    private java.sql.Date getRandomDate(Random random, Calendar calendar) {
+    private java.sql.Date getRandomDate(Calendar calendar) {
         final int DAYS_IN_YEAR = 365;
         Calendar randomDate = (Calendar) calendar.clone();
 
-        randomDate.add(Calendar.DAY_OF_YEAR, -random.nextInt(DAYS_IN_YEAR));
+        randomDate.add(Calendar.DAY_OF_YEAR, -AutobaseDbInitializer.RANDOM.nextInt(DAYS_IN_YEAR));
 
         return new java.sql.Date(randomDate.getTimeInMillis());
     }
 
-    private double getRandomDoubleValueWithCoefficient(Random random, double coefficient) {
-        return Math.round(random.nextDouble() * coefficient * 10.0) / 10.0;
-    }
-
-    private void executeCreateOrDropQuery(String path) {
-        txtFileReader.setFileName(path);
-
-        try {
-            StringBuilder builder = new StringBuilder();
-            List<String> fileData = txtFileReader.readFile();
-
-            for (String line : fileData) {
-                builder.append(line).append("\n");
-            }
-
-            jdbcTemplate.update(builder.toString());
-        }
-        catch (IOException | DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+    private double getRandomDoubleValueWithCoefficient(double coefficient) {
+        return Math.round(AutobaseDbInitializer.RANDOM.nextDouble() * coefficient * 10.0) / 10.0;
     }
 }

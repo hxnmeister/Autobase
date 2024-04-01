@@ -1,4 +1,4 @@
-package com.ua.project.Autobase.service;
+package com.ua.project.Autobase.services;
 
 import lombok.Setter;
 import org.springframework.stereotype.Component;

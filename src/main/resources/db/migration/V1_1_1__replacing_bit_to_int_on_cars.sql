@@ -1,0 +1,2 @@
+ALTER TABLE cars
+ALTER COLUMN is_on_service TYPE INTEGER USING is_on_service::INTEGER;

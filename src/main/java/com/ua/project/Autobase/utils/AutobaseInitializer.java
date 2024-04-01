@@ -1,24 +1,20 @@
-package com.ua.project.Autobase.service;
+package com.ua.project.Autobase.utils;
 
-import com.ua.project.Autobase.AppStarter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
+@Log4j2
 @Service
+@RequiredArgsConstructor
 public class AutobaseInitializer {
-    @Autowired
-    private AutobaseDbInitializer autobaseDbInitializer;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AppStarter.class);
+    private final AutobaseDbInitializer autobaseDbInitializer;
 
     public void autobaseInitialize(){
         try {
-            autobaseDbInitializer.dropTables();
-            autobaseDbInitializer.createTables();
+            autobaseDbInitializer.deleteAllRowsInDB();
 
             autobaseDbInitializer.createRandomCargoTypes();
             autobaseDbInitializer.createRandomCars();
@@ -29,7 +25,7 @@ public class AutobaseInitializer {
             autobaseDbInitializer.createRandomCompletedRoutes();
         }
         catch (RuntimeException | IOException e) {
-            LOGGER.info(e.getMessage());
+            log.debug(e.getMessage());
         }
     }
 }

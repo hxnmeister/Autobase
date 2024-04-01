@@ -1,14 +1,18 @@
 package com.ua.project.Autobase.menu;
 
 import com.ua.project.Autobase.AppStarter;
-import com.ua.project.Autobase.dao.cargo_typeDAO.CargoTypeDao;
-import com.ua.project.Autobase.model.Application;
-import com.ua.project.Autobase.model.Car;
-import com.ua.project.Autobase.model.CargoType;
-import com.ua.project.Autobase.model.Driver;
+import com.ua.project.Autobase.dao.applicationDAO.ApplicationRepository;
+import com.ua.project.Autobase.dao.carDAO.CarRepository;
+import com.ua.project.Autobase.dao.cargo_typeDAO.CargoTypeRepository;
+import com.ua.project.Autobase.dao.driverDAO.DriverRepository;
+import com.ua.project.Autobase.models.Application;
+import com.ua.project.Autobase.models.Car;
+import com.ua.project.Autobase.models.CargoType;
+import com.ua.project.Autobase.models.Driver;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,21 +21,14 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Service
+@RequiredArgsConstructor
 public class MenuExecutor {
-    @Autowired
-    private CarDao carDao;
-
-    @Autowired
-    private CargoTypeDao cargoTypeDao;
-
-    @Autowired
-    private DriverDao driverDao;
-
-    @Autowired
-    private ApplicationDao applicationDao;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AppStarter.class);
+    private final CarRepository carRepository;
+    private final DriverRepository driverRepository;
+    private final CargoTypeRepository cargoTypeRepository;
+    private final ApplicationRepository applicationRepository;
 
     public void startMenu() {
         final Scanner SCANNER = new Scanner(System.in);
@@ -68,24 +65,24 @@ public class MenuExecutor {
                 }
             }
             catch (InputMismatchException e) {
-                LOGGER.warn(" Invalid number input!");
+                log.warn(" Invalid number input!");
             }
             catch (RuntimeException e) {
-                LOGGER.warn(e.getMessage());
+                log.warn(e.getMessage());
             }
         }
     }
 
     public void menuItem1Execute() {
-        displayRawListInfo(" All drivers:", "=", driverDao.findAll());
+        displayRawListInfo(" All drivers:", "=", driverRepository.findAll());
     }
 
     public void menuItem2Execute() {
-        displayRawListInfo(" All cars:", "=", carDao.findAll());
+        displayRawListInfo(" All cars:", "=", carRepository.findAll());
     }
 
     public void menuItem3Execute() {
-        displayRawListInfo(" All applications:", "=", applicationDao.findAll());
+        displayRawListInfo(" All applications:", "=", applicationRepository.findAll());
     }
 
     public void menuItem4Execute() {
@@ -100,12 +97,12 @@ public class MenuExecutor {
         driver.setEarnings(getCorrectBigDecimalInput(" Enter earnings: ", scanner));
         driver.setDrivingExperience(getCorrectDoubleInput(" Enter driving experience: ", scanner));
 
-        if(driverDao.save(driver) > 0) {
+        if(driverRepository.save(driver).getId() != null) {
             System.out.println(" Driver " + driver.getLastName() + " " + driver.getFirstName() + " successfully saved!");
         }
         else {
-            System.out.println(" Cannot execute request with such data!");
-            System.out.println(driver);
+            log.warn(" Cannot execute request with such data!");
+            log.warn(driver);
         }
     }
 
@@ -121,26 +118,28 @@ public class MenuExecutor {
         car.setCondition(getPositiveInteger(" Enter car condition: ", scanner));
         car.setLoadCapacity(getCorrectDoubleInput(" Enter load capacity: ", scanner));
 
-        if(carDao.save(car) > 0) {
+        if(carRepository.save(car).getId() != null) {
             System.out.println(" Car " + car.getModel() + " successfully added!");
         }
         else {
-            System.out.println(" Cannot add this car!");
-            System.out.println(car);
+            log.warn(" Cannot add this car!");
+            log.warn(car);
         }
     }
 
     public void menuItem6Execute() {
+        long id;
         Scanner scanner = new Scanner(System.in);
         Application application = new Application();
-        List<CargoType> cargoTypes = cargoTypeDao.findAll();
+        List<CargoType> cargoTypes = cargoTypeRepository.findAll();
 
         application.setWeight(getCorrectDoubleInput(" Enter cargo weight: ", scanner));
         System.out.println("\n Select cargo type:");
         cargoTypes.forEach(System.out::println);
-        application.setCargoTypeId(getValidId(cargoTypes.stream().map(CargoType::getId).collect(Collectors.toList()), " Enter cargo type ID to add: "));
+        id = getValidId(cargoTypes.stream().map(CargoType::getId).collect(Collectors.toList()), " Enter cargo type ID to add: ");
+        application.setCargoType(cargoTypeRepository.findCargoTypeById(id));
 
-        if (applicationDao.save(application) > 0) {
+        if (applicationRepository.save(application).getId() != null) {
             System.out.println(" Application successfully saved!");
         }
         else {
@@ -156,11 +155,11 @@ public class MenuExecutor {
                 return scanner.nextBigDecimal();
             }
             catch (InputMismatchException e) {
-                LOGGER.warn(" Incorrect value!");
+                log.warn(" Incorrect value!");
                 scanner.nextLine();
             }
             catch (RuntimeException e) {
-                LOGGER.warn(e.getMessage());
+                log.warn(e.getMessage());
                 scanner.nextLine();
             }
         }
@@ -173,11 +172,11 @@ public class MenuExecutor {
                 return scanner.nextDouble();
             }
             catch (InputMismatchException e) {
-                LOGGER.warn(" Incorrect value!");
+                log.warn(" Incorrect value!");
                 scanner.nextLine();
             }
             catch (RuntimeException e) {
-                LOGGER.warn(e.getMessage());
+                log.warn(e.getMessage());
                 scanner.nextLine();
             }
         }
@@ -198,11 +197,11 @@ public class MenuExecutor {
                 return number;
             }
             catch (InputMismatchException e) {
-                LOGGER.warn(" Incorrect value!");
+                log.warn(" Incorrect value!");
                 scanner.nextLine();
             }
             catch (RuntimeException e) {
-                LOGGER.warn(e.getMessage());
+                log.warn(e.getMessage());
                 scanner.nextLine();
             }
         }

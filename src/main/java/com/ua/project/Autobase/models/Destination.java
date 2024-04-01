@@ -1,11 +1,17 @@
-package com.ua.project.Autobase.model;
+package com.ua.project.Autobase.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
 @Table(name = "destinations")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Destination {
     @Id
     @Column(name = "id")

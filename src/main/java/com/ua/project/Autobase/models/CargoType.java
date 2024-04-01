@@ -1,12 +1,19 @@
-package com.ua.project.Autobase.model;
+package com.ua.project.Autobase.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 
 @Data
 @Entity
+@Builder
 @Table(name = "cargo_types")
+@AllArgsConstructor
+@NoArgsConstructor
 public class CargoType {
     @Id
     @Column(name = "id")
