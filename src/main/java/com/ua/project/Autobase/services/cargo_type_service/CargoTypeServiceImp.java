@@ -41,4 +41,9 @@ public class CargoTypeServiceImp implements CargoTypeService {
     public List<CargoType> saveMany(List<CargoType> itemsList) {
         return cargoTypeRepository.saveAll(itemsList);
     }
+
+    @Override
+    public CargoType findCargoTypeById(long id) {
+        return cargoTypeRepository.findCargoTypeById(id);
+    }
 }

@@ -1,18 +1,14 @@
 package com.ua.project.Autobase.menu;
 
-import com.ua.project.Autobase.AppStarter;
-import com.ua.project.Autobase.dao.applicationDAO.ApplicationRepository;
-import com.ua.project.Autobase.dao.carDAO.CarRepository;
-import com.ua.project.Autobase.dao.cargo_typeDAO.CargoTypeRepository;
-import com.ua.project.Autobase.dao.driverDAO.DriverRepository;
-import com.ua.project.Autobase.models.Application;
-import com.ua.project.Autobase.models.Car;
-import com.ua.project.Autobase.models.CargoType;
-import com.ua.project.Autobase.models.Driver;
+import com.ua.project.Autobase.exceptions.CannotAddRouteException;
+import com.ua.project.Autobase.models.*;
+import com.ua.project.Autobase.services.application_service.ApplicationService;
+import com.ua.project.Autobase.services.car_service.CarService;
+import com.ua.project.Autobase.services.cargo_type_service.CargoTypeService;
+import com.ua.project.Autobase.services.driver_service.DriverService;
+import com.ua.project.Autobase.services.route_service.RouteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,10 +21,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class MenuExecutor {
-    private final CarRepository carRepository;
-    private final DriverRepository driverRepository;
-    private final CargoTypeRepository cargoTypeRepository;
-    private final ApplicationRepository applicationRepository;
+    private final CarService carService;
+    private final RouteService routeService;
+    private final DriverService driverService;
+    private final CargoTypeService cargoTypeService;
+    private final ApplicationService applicationService;
 
     public void startMenu() {
         final Scanner SCANNER = new Scanner(System.in);
@@ -58,6 +55,9 @@ public class MenuExecutor {
                     case 6:
                         menuItem6Execute();
                         break;
+                    case 7:
+                        menuItem7Execute();
+                        break;
                     case 0:
                         System.exit(0);
                     default:
@@ -74,18 +74,6 @@ public class MenuExecutor {
     }
 
     public void menuItem1Execute() {
-        displayRawListInfo(" All drivers:", "=", driverRepository.findAll());
-    }
-
-    public void menuItem2Execute() {
-        displayRawListInfo(" All cars:", "=", carRepository.findAll());
-    }
-
-    public void menuItem3Execute() {
-        displayRawListInfo(" All applications:", "=", applicationRepository.findAll());
-    }
-
-    public void menuItem4Execute() {
         Scanner scanner = new Scanner(System.in);
         Driver driver = new Driver();
 
@@ -97,7 +85,7 @@ public class MenuExecutor {
         driver.setEarnings(getCorrectBigDecimalInput(" Enter earnings: ", scanner));
         driver.setDrivingExperience(getCorrectDoubleInput(" Enter driving experience: ", scanner));
 
-        if(driverRepository.save(driver).getId() != null) {
+        if(driverService.save(driver).getId() != null) {
             System.out.println(" Driver " + driver.getLastName() + " " + driver.getFirstName() + " successfully saved!");
         }
         else {
@@ -106,7 +94,7 @@ public class MenuExecutor {
         }
     }
 
-    public void menuItem5Execute() {
+    public void menuItem2Execute() {
         Scanner scanner = new Scanner(System.in);
         Car car = new Car();
 
@@ -118,7 +106,7 @@ public class MenuExecutor {
         car.setCondition(getPositiveInteger(" Enter car condition: ", scanner));
         car.setLoadCapacity(getCorrectDoubleInput(" Enter load capacity: ", scanner));
 
-        if(carRepository.save(car).getId() != null) {
+        if(carService.save(car).getId() != null) {
             System.out.println(" Car " + car.getModel() + " successfully added!");
         }
         else {
@@ -127,25 +115,103 @@ public class MenuExecutor {
         }
     }
 
-    public void menuItem6Execute() {
+    public void menuItem3Execute() {
         long id;
         Scanner scanner = new Scanner(System.in);
         Application application = new Application();
-        List<CargoType> cargoTypes = cargoTypeRepository.findAll();
+        List<CargoType> cargoTypes = cargoTypeService.findAll();
 
         application.setWeight(getCorrectDoubleInput(" Enter cargo weight: ", scanner));
         System.out.println("\n Select cargo type:");
         cargoTypes.forEach(System.out::println);
         id = getValidId(cargoTypes.stream().map(CargoType::getId).collect(Collectors.toList()), " Enter cargo type ID to add: ");
-        application.setCargoType(cargoTypeRepository.findCargoTypeById(id));
+        application.setCargoType(cargoTypeService.findCargoTypeById(id));
 
-        if (applicationRepository.save(application).getId() != null) {
+        if (applicationService.save(application).getId() != null) {
             System.out.println(" Application successfully saved!");
         }
         else {
             System.out.println(" Cannot execute request with such data!");
             System.out.println(application);
         }
+    }
+
+    public void menuItem4Execute() {
+        displayRawListInfo(" All drivers:", "=", driverService.findAll());
+    }
+
+    public void menuItem5Execute() {
+        displayRawListInfo(" All cars:", "=", carService.findAll());
+    }
+
+    public void menuItem6Execute() {
+        displayRawListInfo(" All applications:", "=", applicationService.findAll());
+    }
+
+    public void menuItem7Execute() {
+        List<Car> cars = carService.findAll();
+        List<Route> routes = routeService.findAll();
+        List<Driver> drivers = driverService.findAll();
+        List<Application> applications = applicationService.findAll();
+
+        for (Application application : applications) {
+            try {
+                Route route = getRoute(application, drivers, cars, routes);
+
+                if(!routes.contains(route)) {
+                    routeService.save(route);
+                    routes.add(route);
+                }
+            }
+            catch (CannotAddRouteException e) {
+                log.info(e.getMessage());
+            }
+        }
+    }
+
+    private static Route getRoute(Application application, List<Driver> drivers, List<Car> cars, List<Route> routes) {
+        Route route = new Route();
+
+        for (Driver driver : drivers) {
+            if (driver.getDrivingExperience() >= application.getCargoType().getRequiredExperience() && !isDriverOnRoute(routes, driver)) {
+                route.setDriver(driver);
+                break;
+            }
+        }
+
+        for (Car car : cars) {
+            if(car.getLoadCapacity() >= application.getWeight() && !isCarOnRoute(routes, car)) {
+                route.setCar(car);
+                break;
+            }
+        }
+
+        if (route.getDriver() == null || route.getCar() == null) {
+            throw new CannotAddRouteException(" Cannot add Application to Route: " + application);
+        }
+
+        route.setApplication(application);
+        return route;
+    }
+
+    private static boolean isDriverOnRoute(List<Route> routes, Driver driver) {
+        for (Route route : routes) {
+            if (route.getDriver().getId().equals(driver.getId())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean isCarOnRoute(List<Route> routes, Car car) {
+        for (Route route : routes) {
+            if (route.getCar().getId().equals(car.getId())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private BigDecimal getCorrectBigDecimalInput(String inputMessage, Scanner scanner) {

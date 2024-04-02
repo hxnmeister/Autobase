@@ -6,7 +6,6 @@ import com.ua.project.Autobase.services.autobase_init_service.AutobaseInitServic
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -27,7 +26,6 @@ public class AutobaseDbInitializer {
     private String pathToLastNames;
 
     private final TxtFileReader txtFileReader;
-    private final JdbcTemplate jdbcTemplate;
     private final AutobaseInitService autobaseInitService;
     private static final Random RANDOM = new Random();
 
@@ -47,7 +45,7 @@ public class AutobaseDbInitializer {
                     .builder()
                     .title("CargoTypeTitle" + (i + RANDOM.nextInt(MAX_RANDOM_NUMBER)))
                     .costPerKG(BigDecimal.valueOf(RANDOM.nextDouble() * MONEY_COEFFICIENT))
-                    .requiredExperience(getRandomDoubleValueWithCoefficient(100.0))
+                    .requiredExperience(RANDOM.nextDouble() * 10.0)
                     .build());
         }
 
@@ -69,7 +67,7 @@ public class AutobaseDbInitializer {
                     .condition(Math.max(RANDOM.nextInt(101), MIN_ACCEPTABLE_CONDITION))
                     .isOnService(0)
                     .manufacturer(manufacturers.get(RANDOM.nextInt(manufacturers.size())))
-                    .loadCapacity(Math.max(getRandomDoubleValueWithCoefficient(1000.0), MIN_ACCEPTABLE_WEIGHT))
+                    .loadCapacity(Math.max(RANDOM.nextDouble() * 1000.0, MIN_ACCEPTABLE_WEIGHT))
                     .build());
         }
 
@@ -85,7 +83,7 @@ public class AutobaseDbInitializer {
         for (int i = 0; i < COUNT_OF_ITEMS_IN_LIST; i++) {
             applications.add(Application
                     .builder()
-                    .weight(Math.max(getRandomDoubleValueWithCoefficient(1000.0), MIN_ACCEPTABLE_WEIGHT))
+                    .weight(Math.max(RANDOM.nextDouble() * 1000.0, MIN_ACCEPTABLE_WEIGHT))
                     .cargoType(cargoTypes.get(RANDOM.nextInt(cargoTypes.size())))
                     .build());
         }
@@ -108,8 +106,8 @@ public class AutobaseDbInitializer {
                     .builder()
                     .firstName(firstNames.get(RANDOM.nextInt(firstNames.size())))
                     .lastName(lastNames.get(RANDOM.nextInt(lastNames.size())))
-                    .earnings(MIN_ACCEPTABLE_EARNINGS.max(BigDecimal.valueOf(getRandomDoubleValueWithCoefficient(1000.0))))
-                    .drivingExperience(Math.max(MIN_ACCEPTABLE_EXPERIENCE, getRandomDoubleValueWithCoefficient(100.0)))
+                    .earnings(MIN_ACCEPTABLE_EARNINGS.max(BigDecimal.valueOf(RANDOM.nextDouble() * 1000.0)))
+                    .drivingExperience(Math.max(MIN_ACCEPTABLE_EXPERIENCE, RANDOM.nextDouble() * 10.0))
                     .build());
         }
 
@@ -124,7 +122,7 @@ public class AutobaseDbInitializer {
         for (int i = 1; i <= COUNT_OF_ITEMS_IN_LIST; i++) {
             destinations.add(Destination
                     .builder()
-                    .distance(Math.max(getRandomDoubleValueWithCoefficient(1000.0), MIN_ACCEPTABLE_DISTANCE))
+                    .distance(Math.max(RANDOM.nextDouble() * 1000.0, MIN_ACCEPTABLE_DISTANCE))
                     .country("Country" + i)
                     .city("City" + i)
                     .build());
@@ -133,57 +131,53 @@ public class AutobaseDbInitializer {
         autobaseInitService.saveDestinations(destinations);
     }
 
-    public void createRandomRoutes() {
-        final int COUNT_OF_ITEMS_IN_LIST = 6;
-        List<Application> applications = autobaseInitService.findAllApplications();
-        List<Driver> drivers = autobaseInitService.findAllDrivers();
-        List<Car> cars = autobaseInitService.findAllCars();
-        List<Route> routes = new ArrayList<>();
+//    public void createRandomRoutes() {
+//        final int COUNT_OF_ITEMS_IN_LIST = 6;
+//        List<Application> applications = autobaseInitService.findAllApplications();
+//        List<Driver> drivers = autobaseInitService.findAllDrivers();
+//        List<Car> cars = autobaseInitService.findAllCars();
+//        List<Route> routes = new ArrayList<>();
+//
+//        for (int i = 0; i < COUNT_OF_ITEMS_IN_LIST; i++) {
+//            routes.add(Route
+//                    .builder()
+//                    .application(applications.get(RANDOM.nextInt(applications.size())))
+//                    .driver(drivers.get(RANDOM.nextInt(drivers.size())))
+//                    .car(cars.get(RANDOM.nextInt(cars.size())))
+//                    .build());
+//        }
+//
+//        autobaseInitService.saveRoutes(routes);
+//    }
+//
+//    public void createRandomCompletedRoutes() {
+//        final int COUNT_OF_ITEMS_IN_LIST = 6;
+//        Calendar calendar = new GregorianCalendar();
+//        List<Route> routes = autobaseInitService.findAllRoutes();
+//        List<CompletedRoute> completedRoutes = new ArrayList<>();
+//
+//        for (int i = 0; i < COUNT_OF_ITEMS_IN_LIST; i++) {
+//            java.sql.Date beginDate = getRandomDate(calendar);
+//            java.sql.Date endDate = new java.sql.Date(beginDate.getTime());
+//            endDate.setTime(endDate.getTime() + (Math.max(RANDOM.nextInt(30), 10) * 24L * 3600L * 1000L));
+//
+//            completedRoutes.add(CompletedRoute
+//                    .builder()
+//                    .beginDate(beginDate)
+//                    .endDate(endDate)
+//                    .route(routes.get(RANDOM.nextInt(routes.size())))
+//                    .build());
+//        }
+//
+//        autobaseInitService.saveCompletedRoutes(completedRoutes);
+//    }
 
-        for (int i = 0; i < COUNT_OF_ITEMS_IN_LIST; i++) {
-            routes.add(Route
-                    .builder()
-                    .application(applications.get(RANDOM.nextInt(applications.size())))
-                    .driver(drivers.get(RANDOM.nextInt(drivers.size())))
-                    .car(cars.get(RANDOM.nextInt(cars.size())))
-                    .build());
-        }
-
-        autobaseInitService.saveRoutes(routes);
-    }
-
-    public void createRandomCompletedRoutes() {
-        final int COUNT_OF_ITEMS_IN_LIST = 6;
-        Calendar calendar = new GregorianCalendar();
-        List<Route> routes = autobaseInitService.findAllRoutes();
-        List<CompletedRoute> completedRoutes = new ArrayList<>();
-
-        for (int i = 0; i < COUNT_OF_ITEMS_IN_LIST; i++) {
-            java.sql.Date beginDate = getRandomDate(calendar);
-            java.sql.Date endDate = new java.sql.Date(beginDate.getTime());
-            endDate.setTime(endDate.getTime() + (Math.max(RANDOM.nextInt(30), 10) * 24L * 3600L * 1000L));
-
-            completedRoutes.add(CompletedRoute
-                    .builder()
-                    .beginDate(beginDate)
-                    .endDate(endDate)
-                    .route(routes.get(RANDOM.nextInt(routes.size())))
-                    .build());
-        }
-
-        autobaseInitService.saveCompletedRoutes(completedRoutes);
-    }
-
-    private java.sql.Date getRandomDate(Calendar calendar) {
-        final int DAYS_IN_YEAR = 365;
-        Calendar randomDate = (Calendar) calendar.clone();
-
-        randomDate.add(Calendar.DAY_OF_YEAR, -AutobaseDbInitializer.RANDOM.nextInt(DAYS_IN_YEAR));
-
-        return new java.sql.Date(randomDate.getTimeInMillis());
-    }
-
-    private double getRandomDoubleValueWithCoefficient(double coefficient) {
-        return Math.round(AutobaseDbInitializer.RANDOM.nextDouble() * coefficient * 10.0) / 10.0;
-    }
+//    private java.sql.Date getRandomDate(Calendar calendar) {
+//        final int DAYS_IN_YEAR = 365;
+//        Calendar randomDate = (Calendar) calendar.clone();
+//
+//        randomDate.add(Calendar.DAY_OF_YEAR, -AutobaseDbInitializer.RANDOM.nextInt(DAYS_IN_YEAR));
+//
+//        return new java.sql.Date(randomDate.getTimeInMillis());
+//    }
 }

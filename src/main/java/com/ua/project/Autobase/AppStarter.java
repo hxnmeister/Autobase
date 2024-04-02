@@ -15,6 +15,8 @@ public class AppStarter {
     private final MenuExecutor menuExecutor;
     private final AutobaseInitializer autobaseInitializer;
 
+    private int count = 0;
+
     @Bean
     public ApplicationRunner init() {
         log.debug("Application is started!");

@@ -21,8 +21,8 @@ public class AutobaseInitializer {
             autobaseDbInitializer.createRandomApplications();
             autobaseDbInitializer.createRandomDrivers();
             autobaseDbInitializer.createRandomDestinations();
-            autobaseDbInitializer.createRandomRoutes();
-            autobaseDbInitializer.createRandomCompletedRoutes();
+//            autobaseDbInitializer.createRandomRoutes();
+//            autobaseDbInitializer.createRandomCompletedRoutes();
         }
         catch (RuntimeException | IOException e) {
             log.debug(e.getMessage());

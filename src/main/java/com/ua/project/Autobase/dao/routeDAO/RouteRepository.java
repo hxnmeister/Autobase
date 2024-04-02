@@ -1,5 +1,7 @@
 package com.ua.project.Autobase.dao.routeDAO;
 
+import com.ua.project.Autobase.models.Car;
+import com.ua.project.Autobase.models.Driver;
 import com.ua.project.Autobase.models.Route;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

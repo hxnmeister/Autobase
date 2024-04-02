@@ -40,7 +40,7 @@ public class Car {
                 "  Make: " + model + "\n" +
                 "  Condition: " + condition + "%\n" +
                 "  Is On Service: " + (isOnService == 1 ? "yes" : "no") + "\n" +
-                "  Load Capacity: " + loadCapacity + "kg\n" +
-                "-".repeat(20);
+                "  Load Capacity: " + loadCapacity + " kg\n" +
+                "-".repeat(20) + "\n";
     }
 }

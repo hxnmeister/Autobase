@@ -1,6 +1,8 @@
 package com.ua.project.Autobase.services.route_service;
 
 import com.ua.project.Autobase.dao.routeDAO.RouteRepository;
+import com.ua.project.Autobase.models.Car;
+import com.ua.project.Autobase.models.Driver;
 import com.ua.project.Autobase.models.Route;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
