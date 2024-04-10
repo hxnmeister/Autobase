@@ -12,6 +12,7 @@ public class MenuPublisher {
         System.out.println("  5. Show cars;");
         System.out.println("  6. Show applications;");
         System.out.println("  7. Assign application to driver;");
+        System.out.println("  8. Set car on a service;");
         System.out.println("  0. Exit program;");
         System.out.print(" Enter choice: ");
     }

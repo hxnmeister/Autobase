@@ -2,7 +2,7 @@ package com.ua.project.Autobase.utils;
 
 import com.ua.project.Autobase.models.*;
 import com.ua.project.Autobase.services.TxtFileReader;
-import com.ua.project.Autobase.services.autobase_init_service.AutobaseInitService;
+import com.ua.project.Autobase.services.AutobaseInitService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Log4j2
 @Service
@@ -27,7 +28,6 @@ public class AutobaseDbInitializer {
 
     private final TxtFileReader txtFileReader;
     private final AutobaseInitService autobaseInitService;
-    private static final Random RANDOM = new Random();
 
     public void deleteAllRowsInDB() {
         autobaseInitService.deleteAllRowsInDB();
@@ -37,15 +37,14 @@ public class AutobaseDbInitializer {
     public void createRandomCargoTypes() {
         final int COUNT_OF_ITEMS_IN_LIST = 4;
         final int MAX_RANDOM_NUMBER = 20;
-        final int MONEY_COEFFICIENT = 1000;
         List<CargoType> cargoTypes = new ArrayList<>();
 
         for (int i = 0; i < COUNT_OF_ITEMS_IN_LIST; i++) {
             cargoTypes.add(CargoType
                     .builder()
-                    .title("CargoTypeTitle" + (i + RANDOM.nextInt(MAX_RANDOM_NUMBER)))
-                    .costPerKG(BigDecimal.valueOf(RANDOM.nextDouble() * MONEY_COEFFICIENT))
-                    .requiredExperience(RANDOM.nextDouble() * 10.0)
+                    .title("CargoTypeTitle" + (ThreadLocalRandom.current().nextInt(1, MAX_RANDOM_NUMBER)))
+                    .costPerKG(new BigDecimal(Double.toString(ThreadLocalRandom.current().nextDouble(50, 1000)).replace(',', '.')))
+                    .requiredExperience(ThreadLocalRandom.current().nextDouble(3, 20))
                     .build());
         }
 
@@ -64,10 +63,10 @@ public class AutobaseDbInitializer {
             cars.add(Car
                     .builder()
                     .model("Model" + (i + 1))
-                    .condition(Math.max(RANDOM.nextInt(101), MIN_ACCEPTABLE_CONDITION))
+                    .condition(ThreadLocalRandom.current().nextInt(MIN_ACCEPTABLE_CONDITION, 101))
                     .isOnService(0)
-                    .manufacturer(manufacturers.get(RANDOM.nextInt(manufacturers.size())))
-                    .loadCapacity(Math.max(RANDOM.nextDouble() * 1000.0, MIN_ACCEPTABLE_WEIGHT))
+                    .manufacturer(manufacturers.get(ThreadLocalRandom.current().nextInt(manufacturers.size())))
+                    .loadCapacity(ThreadLocalRandom.current().nextDouble(MIN_ACCEPTABLE_WEIGHT, 1000))
                     .build());
         }
 
@@ -83,8 +82,8 @@ public class AutobaseDbInitializer {
         for (int i = 0; i < COUNT_OF_ITEMS_IN_LIST; i++) {
             applications.add(Application
                     .builder()
-                    .weight(Math.max(RANDOM.nextDouble() * 1000.0, MIN_ACCEPTABLE_WEIGHT))
-                    .cargoType(cargoTypes.get(RANDOM.nextInt(cargoTypes.size())))
+                    .weight(ThreadLocalRandom.current().nextDouble(MIN_ACCEPTABLE_WEIGHT, 1000))
+                    .cargoType(cargoTypes.get(ThreadLocalRandom.current().nextInt(cargoTypes.size())))
                     .build());
         }
 
@@ -104,10 +103,10 @@ public class AutobaseDbInitializer {
         for (int i = 0; i < COUNT_OF_ITEMS_IN_LIST; i++) {
             drivers.add(Driver
                     .builder()
-                    .firstName(firstNames.get(RANDOM.nextInt(firstNames.size())))
-                    .lastName(lastNames.get(RANDOM.nextInt(lastNames.size())))
-                    .earnings(MIN_ACCEPTABLE_EARNINGS.max(BigDecimal.valueOf(RANDOM.nextDouble() * 1000.0)))
-                    .drivingExperience(Math.max(MIN_ACCEPTABLE_EXPERIENCE, RANDOM.nextDouble() * 10.0))
+                    .firstName(firstNames.get(ThreadLocalRandom.current().nextInt(firstNames.size())))
+                    .lastName(lastNames.get(ThreadLocalRandom.current().nextInt(lastNames.size())))
+                    .earnings(new BigDecimal(Double.toString(ThreadLocalRandom.current().nextDouble(50, 1000)).replace(',', '.')))
+                    .drivingExperience(ThreadLocalRandom.current().nextDouble(3, 20))
                     .build());
         }
 
@@ -122,7 +121,7 @@ public class AutobaseDbInitializer {
         for (int i = 1; i <= COUNT_OF_ITEMS_IN_LIST; i++) {
             destinations.add(Destination
                     .builder()
-                    .distance(Math.max(RANDOM.nextDouble() * 1000.0, MIN_ACCEPTABLE_DISTANCE))
+                    .distance(ThreadLocalRandom.current().nextDouble(MIN_ACCEPTABLE_DISTANCE, 10000))
                     .country("Country" + i)
                     .city("City" + i)
                     .build());

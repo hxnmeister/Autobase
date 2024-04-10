@@ -2,11 +2,11 @@ package com.ua.project.Autobase.menu;
 
 import com.ua.project.Autobase.exceptions.CannotAddRouteException;
 import com.ua.project.Autobase.models.*;
-import com.ua.project.Autobase.services.application_service.ApplicationService;
-import com.ua.project.Autobase.services.car_service.CarService;
-import com.ua.project.Autobase.services.cargo_type_service.CargoTypeService;
-import com.ua.project.Autobase.services.driver_service.DriverService;
-import com.ua.project.Autobase.services.route_service.RouteService;
+import com.ua.project.Autobase.services.ApplicationService;
+import com.ua.project.Autobase.services.CarService;
+import com.ua.project.Autobase.services.CargoTypeService;
+import com.ua.project.Autobase.services.DriverService;
+import com.ua.project.Autobase.services.RouteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;

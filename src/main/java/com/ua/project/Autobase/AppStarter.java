@@ -1,6 +1,5 @@
 package com.ua.project.Autobase;
 
-import com.ua.project.Autobase.menu.MenuExecutor;
 import com.ua.project.Autobase.utils.AutobaseInitializer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -12,10 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @RequiredArgsConstructor
 public class AppStarter {
-    private final MenuExecutor menuExecutor;
     private final AutobaseInitializer autobaseInitializer;
-
-    private int count = 0;
 
     @Bean
     public ApplicationRunner init() {
@@ -23,7 +19,6 @@ public class AppStarter {
 
         return args -> {
           autobaseInitializer.autobaseInitialize();
-          menuExecutor.startMenu();
         };
     }
 }

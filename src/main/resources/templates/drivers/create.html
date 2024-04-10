@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <div th:replace="./drivers/index"></div>
+
+        <form action="/drivers/insert" name="createDriver" method="post" class="mx-auto mt-5" style="width: 500px">
+            <div class="form-floating mb-3">
+                <input type="text" id="driver-fn" name="driverFirstName" class="form-control" placeholder="Ivan">
+                <label for="driver-fn" >First name:</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" id="driver-ln" name="driverLastName" class="form-control" placeholder="Ivanov">
+                <label for="driver-ln">Last name:</label>
+            </div>
+            <div class="mb-3">
+                <label for="driver-earnings" class="form-label">Earnings:</label>
+                <input type="number" id="driver-earnings" name="driverEarnings" class="form-control" min="0" value="0" step="0.5">
+            </div>
+            <div class="mb-3">
+                <label for="driver-experience" class="form-label">Driving Experience:</label>
+                <input type="number" id="driver-experience" name="driverExperience" class="form-control" min="1" value="1" step="0.5">
+            </div>
+
+            <input type="submit" class="btn btn-primary float-end" value="Submit">
+        </form>
+    </body>
+</html>

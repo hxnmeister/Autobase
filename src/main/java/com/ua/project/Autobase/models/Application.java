@@ -3,7 +3,7 @@ package com.ua.project.Autobase.models;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.NoArgsConstructor;
 
 @Data

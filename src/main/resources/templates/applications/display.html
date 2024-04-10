@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <div th:replace="./applications/index"></div>
+
+        <table class="table" style="margin: 20px">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Weight</th>
+                <th scope="col">Cargo</th>
+                <th scope="col">Cost Per Kg</th>
+                <th scope="col">Required Experience</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${applications}">
+                <th th:utext="${item.id}" scope="row"></th>
+                <td th:utext="${item.weight} + 'kg'"></td>
+                <td th:utext="${item.cargoType.title}"></td>
+                <td th:utext="${item.cargoType.costPerKG} + '$'"></td>
+                <td th:utext="${item.cargoType.requiredExperience} + ' years'"></td>
+            </tr>
+            </tbody>
+        </table>
+    </body>
+</html>

@@ -1,0 +1,10 @@
+<div th:fragment="statusBar" xmlns:th="http://www.thymeleaf.org">
+    <div class="container mt-5">
+        <div th:if="${success != null}" class="alert alert-success" role="alert">
+            <p th:utext="${success}"></p>
+        </div>
+        <div th:if="${error != null}" class="alert alert-danger" role="alert">
+            <p th:utext="${error}"></p>
+        </div>
+    </div>
+</div>

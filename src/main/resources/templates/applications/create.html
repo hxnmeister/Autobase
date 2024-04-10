@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <div th:replace="./applications/index"></div>
+
+        <form action="/applications/insert" name="createApplication" method="post" class="mx-auto mt-5" style="width: 500px">
+            <div class="form-floating mb-3">
+                <input type="number" id="application-weight" name="applicationWeight" class="form-control" min="10" value="0" step="0.5">
+                <label for="application-weight" class="form-label mb-3">Weight:</label>
+            </div>
+            <select  class="form-select" aria-label="Cargo Type" name="applicationCargoId">
+                <option th:each="cargoType : ${cargoTypes}" th:value="${cargoType.id}" th:utext="${cargoType.title}"></option>
+            </select>
+            <input type="submit" class="btn btn-primary float-end" value="Submit">
+        </form>
+    </body>
+</html>

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import java.sql.Date;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.NoArgsConstructor;
 
 @Data
