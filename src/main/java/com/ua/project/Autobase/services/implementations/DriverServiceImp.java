@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,5 +42,15 @@ public class DriverServiceImp implements DriverService {
     @Override
     public List<Driver> saveMany(List<Driver> itemsList) {
         return driverRepository.saveAll(itemsList);
+    }
+
+    @Override
+    public List<Driver> getDriversByDrivingExperienceIsGreaterThanAndNotOnRoute(Double requiredExperience) {
+        return driverRepository.getDriversByDrivingExperienceIsGreaterThanAndNotOnRoute(requiredExperience);
+    }
+
+    @Override
+    public Optional<Driver> findDriverById(Long id) {
+        return driverRepository.findDriverById(id);
     }
 }

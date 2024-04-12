@@ -24,4 +24,5 @@ public interface AutobaseInitService {
     void saveApplications(List<Application> applications);
     void saveDestinations(List<Destination> destinations);
     void saveCompletedRoutes(List<CompletedRoute> completedRoutes);
+    void saveUsersAndApplyDriverRole(List<User> users);
 }

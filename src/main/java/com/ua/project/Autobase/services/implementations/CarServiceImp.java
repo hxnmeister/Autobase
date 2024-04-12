@@ -42,4 +42,9 @@ public class CarServiceImp implements CarService {
     public List<Car> saveMany(List<Car> itemsList) {
         return carRepository.saveAll(itemsList);
     }
+
+    @Override
+    public List<Car> getCarsByLoadCapacityIsGreaterThanAndNotOnRoute(Double requiredCapacity) {
+        return carRepository.getCarsByLoadCapacityIsGreaterThanAndNotOnRoute(requiredCapacity);
+    }
 }

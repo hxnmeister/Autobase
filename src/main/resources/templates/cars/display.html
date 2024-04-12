@@ -2,10 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Title</title>
+        <title>Cars - Display</title>
     </head>
     <body>
-        <div th:replace="./cars/index"></div>
+        <div th:replace="/cars/index"></div>
 
         <table class="table" style="margin: 20px">
             <thead>
@@ -19,7 +19,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="car : ${cars}">
+            <tr th:each="car : ${cars}" th:class="${car.equals(currentDriverCar) ? 'table-primary' : ''}">
+                <th th:utext="${car.id}" scope="row"></th>
                 <th th:utext="${car.id}" scope="row"></th>
                 <td th:utext="${car.model}"></td>
                 <td th:utext="${car.condition} + '%'"></td>

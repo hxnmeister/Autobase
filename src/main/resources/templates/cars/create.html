@@ -2,26 +2,26 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Title</title>
+        <title>Cars - Create</title>
     </head>
     <body>
-        <div th:replace="./cars/index"></div>
+        <div th:replace="/cars/index :: carsNavBar"></div>
 
         <form action="/cars/insert" name="createCar" method="post" class="mx-auto mt-5" style="width: 500px">
             <div class="form-floating mb-3">
-                <input type="text" id="car-model" name="carModel" class="form-control" placeholder="Model X">
+                <input type="text" id="car-model" name="carModel" class="form-control" placeholder="Model X" required>
                 <label for="car-model" >Model:</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" id="car-manufacturer" name="carManufacturer" class="form-control" placeholder="Tesla">
+                <input type="text" id="car-manufacturer" name="carManufacturer" class="form-control" placeholder="Tesla" required>
                 <label for="car-manufacturer">Manufacturer:</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="number" id="car-condition" name="carCondition" class="form-control">
+                <input type="number" id="car-condition" name="carCondition" class="form-control" min="5" value="10" required>
                 <label for="car-condition">Condition:</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="number" id="car-load-capacity" name="carLoadCapacity" class="form-control">
+                <input type="number" id="car-load-capacity" name="carLoadCapacity" class="form-control" min="10" value="10" required>
                 <label for="car-load-capacity">Load Capacity:</label>
             </div>
             <div class="mb-3">
@@ -30,13 +30,13 @@
                     <label for="car-service-true">Yes</label>
                     <input type="radio" id="car-service-true" name="carOnService" class="form-check-input" value="1">
                 </div>
-                <div class="mb-2">
+                <div class="mb-3">
                     <label for="car-service-false">No</label>
                     <input type="radio" id="car-service-false" name="carOnService" class="form-check-input" value="0" checked>
                 </div>
             </div>
 
-            <input type="submit" class="btn btn-primary float-end" value="Submit">
+            <input type="submit" class="btn btn-outline-success float-end" value="Submit">
         </form>
     </body>
 </html>

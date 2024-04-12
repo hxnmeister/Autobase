@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Authentication</title>
+    </head>
+    <body>
+        <div th:replace="main"></div>
+
+        <div th:if="${#request.getParameter('error') == 'true'}">
+            <div class="container mt-5">
+                <div class="alert alert-danger" role="alert">
+                    <p>Login failed!
+                    Check your credential!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mb-5">
+            <form th:action="@{/j_spring_security_check}" name='login' method='POST' class="mx-auto mt-5" style="width: 500px">
+                <div class="form-floating mb-3">
+                    <input type="text" id="user-login" name="login" class="form-control" placeholder="Tesla" required>
+                    <label for="user-login">Login:</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" id="user-password" name="password" class="form-control" placeholder="Model X" required>
+                    <label for="user-password" >Password:</label>
+                </div>
+
+                <input type="submit" class="btn btn-outline-success mb-5" value="Submit">
+            </form>
+        </div>
+
+        <div class="container mt-5">
+            <div class="alert alert-primary">
+                <p>Logins and Passwords:</p>
+                <ul>
+                    <li th:each="user : ${users}" th:utext="${user.login} + ': ' + ${user.password} + ' (123)'"></li>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>

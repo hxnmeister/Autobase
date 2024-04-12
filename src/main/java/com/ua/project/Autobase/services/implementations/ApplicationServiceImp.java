@@ -42,4 +42,9 @@ public class ApplicationServiceImp implements ApplicationService {
     public List<Application> saveMany(List<Application> itemsList) {
         return applicationRepository.saveAll(itemsList);
     }
+
+    @Override
+    public List<Application> getNotAssignedToRoutesApplications() {
+        return applicationRepository.getNotAssignedToRoutesApplications();
+    }
 }

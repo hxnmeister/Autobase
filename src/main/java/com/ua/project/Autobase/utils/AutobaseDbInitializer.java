@@ -130,6 +130,22 @@ public class AutobaseDbInitializer {
         autobaseInitService.saveDestinations(destinations);
     }
 
+    public void addDriversAccounts() {
+        List<User> users = new ArrayList<>();
+        final List<Driver> drivers = autobaseInitService.findAllDrivers();
+        final String TEMP_PASSWORD = "$2a$12$euyIGeZjFOsnbadO0Xdn0uJf2.aEhOtc73yjqOrQyFcxKUhjsJesu"; //123
+
+        drivers.forEach((driver) -> users.add(User.builder()
+                .login(driver.getFirstName().toLowerCase() +
+                        "_" + driver.getLastName().toLowerCase() +
+                        driver.getId())
+                .password(TEMP_PASSWORD)
+                .enabled(true)
+                .build()));
+
+        autobaseInitService.saveUsersAndApplyDriverRole(users);
+    }
+
 //    public void createRandomRoutes() {
 //        final int COUNT_OF_ITEMS_IN_LIST = 6;
 //        List<Application> applications = autobaseInitService.findAllApplications();

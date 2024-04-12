@@ -6,4 +6,5 @@ import com.ua.project.Autobase.services.CRUDInterface;
 import java.util.List;
 
 public interface CarService extends CRUDInterface<Car> {
+    List<Car> getCarsByLoadCapacityIsGreaterThanAndNotOnRoute(Double requiredCapacity);
 }

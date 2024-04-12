@@ -1,5 +1,9 @@
 package com.ua.project.Autobase.controllers;
 
+import com.ua.project.Autobase.dto.ApplicationDto;
+import com.ua.project.Autobase.exceptions.RequiredParamIsEmptyException;
+import com.ua.project.Autobase.exceptions.RequiredParamIsEmptyOrLessException;
+import com.ua.project.Autobase.exceptions.RequiredParamIsEmptyOrWrongId;
 import com.ua.project.Autobase.models.Application;
 import com.ua.project.Autobase.models.CargoType;
 import com.ua.project.Autobase.services.ApplicationService;
@@ -10,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,6 +47,9 @@ public class ApplicationController {
                          @RequestParam(name = "applicationCargoId") Long cargoId,
                          Model model) {
         try {
+            checkInsertApplicationData(ApplicationDto.builder().weight(weight).cargoTypeId(cargoId).build(),
+                    cargoTypeService.findAll().stream().map(CargoType::getId).toList());
+
             CargoType cargoType = cargoTypeService.findCargoTypeById(cargoId);
 
             applicationService.save(Application
@@ -50,11 +59,22 @@ public class ApplicationController {
                     .build());
 
             model.addAttribute("success", "Application inserted!");
+            return "/applications/index";
         }
         catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
+            return "/applications/create";
         }
+    }
 
-        return "/applications/index";
+    private static void checkInsertApplicationData(ApplicationDto applicationDto, List<Long> cargoTypeIds) {
+        final double MIN_WEIGHT = 20;
+
+        if (applicationDto.getWeight() == null || applicationDto.getWeight() < MIN_WEIGHT) {
+            throw new RequiredParamIsEmptyOrLessException("Weight", String.valueOf(MIN_WEIGHT));
+        }
+        else if (applicationDto.getCargoTypeId() == null || !cargoTypeIds.contains(applicationDto.getCargoTypeId())) {
+            throw new RequiredParamIsEmptyOrWrongId("Cargo type ID");
+        }
     }
 }

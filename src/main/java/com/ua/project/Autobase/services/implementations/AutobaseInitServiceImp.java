@@ -1,12 +1,6 @@
 package com.ua.project.Autobase.services.implementations;
 
-import com.ua.project.Autobase.repositories.ApplicationRepository;
-import com.ua.project.Autobase.repositories.CarRepository;
-import com.ua.project.Autobase.repositories.CargoTypeRepository;
-import com.ua.project.Autobase.repositories.CompletedRouteRepository;
-import com.ua.project.Autobase.repositories.DestinationRepository;
-import com.ua.project.Autobase.repositories.DriverRepository;
-import com.ua.project.Autobase.repositories.RouteRepository;
+import com.ua.project.Autobase.repositories.*;
 import com.ua.project.Autobase.models.*;
 import com.ua.project.Autobase.services.AutobaseInitService;
 import com.ua.project.Autobase.services.TxtFileReader;
@@ -17,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,8 +26,11 @@ public class AutobaseInitServiceImp implements AutobaseInitService {
     private final JdbcTemplate jdbcTemplate;
     private final TxtFileReader txtFileReader;
     private final CarRepository carRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final RouteRepository routeRepository;
     private final DriverRepository driverRepository;
+    private final UserRoleRepository userRoleRepository;
     private final CargoTypeRepository cargoTypeRepository;
     private final ApplicationRepository applicationRepository;
     private final DestinationRepository destinationRepository;
@@ -41,8 +39,11 @@ public class AutobaseInitServiceImp implements AutobaseInitService {
     @Override
     public void deleteAllRowsInDB() {
         carRepository.deleteAll();
+        userRepository.deleteAll();
+        roleRepository.deleteAll();
         routeRepository.deleteAll();
         driverRepository.deleteAll();
+        userRoleRepository.deleteAll();
         cargoTypeRepository.deleteAll();
         applicationRepository.deleteAll();
         destinationRepository.deleteAll();
@@ -127,6 +128,18 @@ public class AutobaseInitServiceImp implements AutobaseInitService {
     @Override
     public void saveCompletedRoutes(List<CompletedRoute> completedRoutes) {
         completedRouteRepository.saveAll(completedRoutes);
+    }
+
+    @Override
+    public void saveUsersAndApplyDriverRole(List<User> users) {
+        final String ROLE = "ROLE_DRIVER";
+        List<UserRole> userRoleList = new ArrayList<>();
+        List<User> savedUsers = userRepository.saveAll(users);
+        Role savedRole = roleRepository.save(Role.builder().title(ROLE).build());
+
+        savedUsers.forEach((savedUser) -> userRoleList.add(UserRole.builder().user(savedUser).role(savedRole).build()));
+
+        userRoleRepository.saveAll(userRoleList);
     }
 
     private void executeCreateOrDropQuery(String path) {

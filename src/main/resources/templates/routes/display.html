@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Routes - Display</title>
+    </head>
+    <body>
+        <div th:replace="/routes/index"></div>
+
+        <table class="table" style="margin: 20px">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Driver Name</th>
+                <th scope="col">Car Model</th>
+                <th scope="col">Car Condition</th>
+                <th scope="col">Car On Service</th>
+                <th scope="col">Cargo Weight</th>
+                <th scope="col">Distance Travelled</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="route : ${routes}">
+                <th th:utext="${route.id}" scope="row"></th>
+                <td th:utext="${route.driver.firstName} + ' ' + ${route.driver.lastName}"></td>
+                <td th:utext="${route.car.model}"></td>
+                <td th:utext="${route.car.condition} + '%'"></td>
+                <td th:utext="${route.car.isOnService == 1 ? 'yes' : 'no'}"></td>
+                <td th:utext="${route.application.weight} + 'kg'"></td>
+                <td th:utext="${route.distanceTraveled} + 'km'"></td>
+            </tr>
+            </tbody>
+        </table>
+    </body>
+</html>

@@ -2,12 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Cars</title>
+        <title>Drivers - Main</title>
     </head>
     <body>
         <div th:replace="main"></div>
 
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <nav th:fragment="driversNavBar" class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">Drivers Navigation Panel</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,7 +18,7 @@
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" th:href="@{/drivers/get-all}">Show All</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" th:if="${#request.isUserInRole('ROLE_ADMIN') || #request.isUserInRole('ROLE_DISPATCHER')}">
                             <a class="nav-link" aria-current="page" th:href="@{/drivers/create}">Create</a>
                         </li>
                     </ul>

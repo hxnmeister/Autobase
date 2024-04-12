@@ -29,4 +29,7 @@ public class Route {
     @ManyToOne
     @JoinColumn(name = "car_id", nullable = false)
     private Car car;
+
+    @Column(name = "distance_traveled")
+    private Double distanceTraveled;
 }
