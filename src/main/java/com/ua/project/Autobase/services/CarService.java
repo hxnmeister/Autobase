@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface CarService extends CRUDInterface<Car> {
     List<Car> getCarsByLoadCapacityIsGreaterThanAndNotOnRoute(Double requiredCapacity);
+
+    Car changeCarCondition(Car currentRouteCar);
 }

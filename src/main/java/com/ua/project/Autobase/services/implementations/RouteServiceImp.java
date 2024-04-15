@@ -1,20 +1,15 @@
 package com.ua.project.Autobase.services.implementations;
 
 import com.ua.project.Autobase.exceptions.CannotAddRouteException;
-import com.ua.project.Autobase.models.Application;
-import com.ua.project.Autobase.models.Car;
-import com.ua.project.Autobase.models.Driver;
+import com.ua.project.Autobase.models.*;
 import com.ua.project.Autobase.repositories.RouteRepository;
-import com.ua.project.Autobase.models.Route;
-import com.ua.project.Autobase.services.ApplicationService;
-import com.ua.project.Autobase.services.CarService;
-import com.ua.project.Autobase.services.DriverService;
-import com.ua.project.Autobase.services.RouteService;
+import com.ua.project.Autobase.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +18,7 @@ public class RouteServiceImp implements RouteService {
     private final DriverService driverService;
     private final CarService carService;
     private final ApplicationService applicationService;
+    private final DestinationService destinationService;
 
     @Override
     public Route save(Route item) {
@@ -55,7 +51,7 @@ public class RouteServiceImp implements RouteService {
     }
 
     @Override
-    public Route createRoute(Application application) {
+    public Route createRoute(Application application, List<Destination> destinations) {
         Route route = new Route();
         List<Car> cars = carService.getCarsByLoadCapacityIsGreaterThanAndNotOnRoute(application.getWeight());
         List<Driver> drivers = driverService.getDriversByDrivingExperienceIsGreaterThanAndNotOnRoute(application.getCargoType().getRequiredExperience());
@@ -68,6 +64,7 @@ public class RouteServiceImp implements RouteService {
         }
 
         route.setDistanceTraveled(0D);
+        route.setDestination(destinations.get(ThreadLocalRandom.current().nextInt(destinations.size())));
         route.setApplication(application);
         return route;
     }
@@ -75,11 +72,12 @@ public class RouteServiceImp implements RouteService {
     @Override
     public boolean setRoutes() {
         List<Route> routes = routeRepository.findAll();
-        List<Application> notAssignedApplications = applicationService.getNotAssignedToRoutesApplications();
+        List<Destination> destinations = destinationService.findAll();
+        List<Application> applications = applicationService.getFreeApplications();
 
-        for (Application application : notAssignedApplications) {
+        for (Application application : applications) {
             try {
-                Route route = this.createRoute(application);
+                Route route = this.createRoute(application, destinations);
 
                 if(!routes.contains(route)) {
                     routes.add(routeRepository.save(route));

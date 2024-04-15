@@ -27,6 +27,10 @@ public class Route {
     private Driver driver;
 
     @ManyToOne
+    @JoinColumn(name = "destination_id", nullable = false)
+    private Destination destination;
+
+    @ManyToOne
     @JoinColumn(name = "car_id", nullable = false)
     private Car car;
 

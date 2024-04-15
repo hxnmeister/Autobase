@@ -11,13 +11,13 @@ import java.util.List;
 @Repository
 @Transactional
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
-    String SELECT_NOT_ASSIGNED_TO_ROUTES_APPLICATIONS = """
+    String SELECT_FREE_APPLICATIONS = """
         SELECT a.*
         FROM applications a
-        LEFT JOIN routes r ON a.id = r.application_id
-        WHERE r.application_id IS NULL
+        LEFT JOIN completed_routes cr ON a.id = cr.application_id
+        WHERE cr.application_id IS NULL
     """;
 
-    @Query(value = SELECT_NOT_ASSIGNED_TO_ROUTES_APPLICATIONS, nativeQuery = true)
-    List<Application> getNotAssignedToRoutesApplications();
+    @Query(value = SELECT_FREE_APPLICATIONS, nativeQuery = true)
+    List<Application> getFreeApplications();
 }

@@ -44,7 +44,7 @@ public class ApplicationServiceImp implements ApplicationService {
     }
 
     @Override
-    public List<Application> getNotAssignedToRoutesApplications() {
-        return applicationRepository.getNotAssignedToRoutesApplications();
+    public List<Application> getFreeApplications() {
+        return applicationRepository.getFreeApplications();
     }
 }

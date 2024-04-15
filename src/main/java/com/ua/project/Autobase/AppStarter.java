@@ -1,6 +1,7 @@
 package com.ua.project.Autobase;
 
 import com.ua.project.Autobase.models.UserRole;
+import com.ua.project.Autobase.services.DaySimulationService;
 import com.ua.project.Autobase.services.RouteService;
 import com.ua.project.Autobase.services.UserRoleService;
 import com.ua.project.Autobase.utils.AutobaseInitializer;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 public class AppStarter {
     private final AutobaseInitializer autobaseInitializer;
     private final RouteService routeService;
+    private final DaySimulationService daySimulationService;
 
     @Bean
     public ApplicationRunner init() {
@@ -24,6 +26,7 @@ public class AppStarter {
         return args -> {
             autobaseInitializer.autobaseInitialize();
             routeService.setRoutes();
+            daySimulationService.startDaySimulation();
         };
     }
 }

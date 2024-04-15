@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -46,5 +47,25 @@ public class CarServiceImp implements CarService {
     @Override
     public List<Car> getCarsByLoadCapacityIsGreaterThanAndNotOnRoute(Double requiredCapacity) {
         return carRepository.getCarsByLoadCapacityIsGreaterThanAndNotOnRoute(requiredCapacity);
+    }
+
+    @Override
+    public Car changeCarCondition(Car currentRouteCar) {
+        if (currentRouteCar.getIsOnService() == 1) {
+            currentRouteCar.setCondition(currentRouteCar.getCondition() + ThreadLocalRandom.current().nextInt(2, 15));
+
+            if (currentRouteCar.getCondition() > 80) {
+                currentRouteCar.setIsOnService(0);
+            }
+        }
+        else {
+            currentRouteCar.setCondition(currentRouteCar.getCondition() - ThreadLocalRandom.current().nextInt(2, 8));
+
+            if (currentRouteCar.getCondition() < 20) {
+                currentRouteCar.setIsOnService(1);
+            }
+        }
+
+        return currentRouteCar;
     }
 }

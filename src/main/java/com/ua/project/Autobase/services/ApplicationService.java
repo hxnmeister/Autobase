@@ -6,5 +6,5 @@ import com.ua.project.Autobase.services.CRUDInterface;
 import java.util.List;
 
 public interface ApplicationService extends CRUDInterface<Application> {
-    List<Application> getNotAssignedToRoutesApplications();
+    List<Application> getFreeApplications();
 }

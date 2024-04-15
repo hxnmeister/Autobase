@@ -43,7 +43,7 @@ public class AutobaseDbInitializer {
             cargoTypes.add(CargoType
                     .builder()
                     .title("CargoTypeTitle" + (ThreadLocalRandom.current().nextInt(1, MAX_RANDOM_NUMBER)))
-                    .costPerKG(new BigDecimal(Double.toString(ThreadLocalRandom.current().nextDouble(50, 1000)).replace(',', '.')))
+                    .costPerKG(new BigDecimal(Double.toString(ThreadLocalRandom.current().nextDouble(50, 100)).replace(',', '.')))
                     .requiredExperience(ThreadLocalRandom.current().nextDouble(3, 20))
                     .build());
         }

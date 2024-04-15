@@ -27,7 +27,7 @@
                 <td th:utext="${route.car.condition} + '%'"></td>
                 <td th:utext="${route.car.isOnService == 1 ? 'yes' : 'no'}"></td>
                 <td th:utext="${route.application.weight} + 'kg'"></td>
-                <td th:utext="${route.distanceTraveled} + 'km'"></td>
+                <td th:utext="${route.distanceTraveled} + 'km / ' + ${route.destination.distance} + 'km'"></td>
             </tr>
             </tbody>
         </table>
