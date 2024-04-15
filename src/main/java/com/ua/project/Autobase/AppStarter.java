@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class AppStarter {
     private final AutobaseInitializer autobaseInitializer;
-    private final RouteService routeService;
     private final DaySimulationService daySimulationService;
 
     @Bean
@@ -25,7 +24,6 @@ public class AppStarter {
 
         return args -> {
             autobaseInitializer.autobaseInitialize();
-            routeService.setRoutes();
             daySimulationService.startDaySimulation();
         };
     }

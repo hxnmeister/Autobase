@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -34,8 +35,11 @@ public class RouteSimulationServiceImp implements RouteSimulationService {
         }
 
         List<Car> updatedCars = new ArrayList<>();
+        Iterator<Route> iterator = routes.iterator();
 
-        for (Route route : routes) {
+        while (iterator.hasNext()) {
+            Route route = iterator.next();
+
             if (route.getDistanceTraveled() >= route.getDestination().getDistance()) {
                 final Driver driver = route.getDriver();
                 final LocalDateTime endDate = LocalDateTime.now();
@@ -52,7 +56,7 @@ public class RouteSimulationServiceImp implements RouteSimulationService {
                         .build());
 
                 routeService.delete(route);
-                routes.remove(route);
+                iterator.remove();
             }
             else {
                 updatedCars.add(carService.changeCarCondition(route.getCar()));

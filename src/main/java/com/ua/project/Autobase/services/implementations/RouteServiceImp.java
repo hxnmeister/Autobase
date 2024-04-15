@@ -56,6 +56,10 @@ public class RouteServiceImp implements RouteService {
         List<Car> cars = carService.getCarsByLoadCapacityIsGreaterThanAndNotOnRoute(application.getWeight());
         List<Driver> drivers = driverService.getDriversByDrivingExperienceIsGreaterThanAndNotOnRoute(application.getCargoType().getRequiredExperience());
 
+        if (cars.isEmpty() || drivers.isEmpty()) {
+            return Route.builder().build();
+        }
+
         route.setDriver(drivers.stream().min(Comparator.comparingDouble(Driver::getDrivingExperience)).orElseThrow(CannotAddRouteException::new));
         route.setCar(cars.stream().min(Comparator.comparingDouble(Car::getLoadCapacity)).orElseThrow(CannotAddRouteException::new));
 
@@ -76,15 +80,10 @@ public class RouteServiceImp implements RouteService {
         List<Application> applications = applicationService.getFreeApplications();
 
         for (Application application : applications) {
-            try {
-                Route route = this.createRoute(application, destinations);
+            Route route = this.createRoute(application, destinations);
 
-                if(!routes.contains(route)) {
-                    routes.add(routeRepository.save(route));
-                }
-            }
-            catch (CannotAddRouteException e) {
-                continue;
+            if(!routes.contains(route) && !route.equals(Route.builder().build())) {
+                routes.add(routeRepository.save(route));
             }
         }
 
