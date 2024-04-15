@@ -1,162 +1,117 @@
 package com.ua.project.Autobase.services.implementations;
 
-import com.ua.project.Autobase.repositories.*;
 import com.ua.project.Autobase.models.*;
-import com.ua.project.Autobase.services.AutobaseInitService;
-import com.ua.project.Autobase.services.TxtFileReader;
+import com.ua.project.Autobase.services.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class AutobaseInitServiceImp implements AutobaseInitService {
-    @Value("${data.dropSqlTables}")
-    private String pathToDropTables;
-
-    @Value("${data.createSqlTables}")
-    private String pathToCreateTables;
-
-    private final JdbcTemplate jdbcTemplate;
-    private final TxtFileReader txtFileReader;
-    private final CarRepository carRepository;
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final RouteRepository routeRepository;
-    private final DriverRepository driverRepository;
-    private final UserRoleRepository userRoleRepository;
-    private final CargoTypeRepository cargoTypeRepository;
-    private final ApplicationRepository applicationRepository;
-    private final DestinationRepository destinationRepository;
-    private final CompletedRouteRepository completedRouteRepository;
+    private final CarService carService;
+    private final UserService userService;
+    private final RoleService roleService;
+    private final RouteService routeService;
+    private final DriverService driverService;
+    private final UserRoleService userRoleService;
+    private final CargoTypeService cargoTypeService;
+    private final ApplicationService applicationService;
+    private final DestinationService destinationService;
+    private final CompletedRouteService completedRouteService;
 
     @Override
     public void deleteAllRowsInDB() {
-        carRepository.deleteAll();
-        userRepository.deleteAll();
-        roleRepository.deleteAll();
-        routeRepository.deleteAll();
-        driverRepository.deleteAll();
-        userRoleRepository.deleteAll();
-        cargoTypeRepository.deleteAll();
-        applicationRepository.deleteAll();
-        destinationRepository.deleteAll();
-        completedRouteRepository.deleteAll();
-    }
-
-    @Override
-    public void dropAllTablesInDB() {
-        executeCreateOrDropQuery(pathToDropTables);
-    }
-
-    @Override
-    public void createTablesInDB() {
-        executeCreateOrDropQuery(pathToCreateTables);
+        carService.deleteAll();
+        userService.deleteAll();
+        roleService.deleteAll();
+        routeService.deleteAll();
+        driverService.deleteAll();
+        userRoleService.deleteAll();
+        cargoTypeService.deleteAll();
+        applicationService.deleteAll();
+        destinationService.deleteAll();
+        completedRouteService.deleteAll();
     }
 
     @Override
     public List<Car> findAllCars() {
-        return carRepository.findAll();
+        return carService.findAll();
     }
 
     @Override
     public List<Route> findAllRoutes() {
-        return routeRepository.findAll();
+        return routeService.findAll();
     }
 
     @Override
     public List<Driver> findAllDrivers() {
-        return driverRepository.findAll();
+        return driverService.findAll();
     }
 
     @Override
     public List<CargoType> findAllCargoTypes() {
-        return cargoTypeRepository.findAll();
+        return cargoTypeService.findAll();
     }
 
     @Override
     public List<Application> findAllApplications() {
-        return applicationRepository.findAll();
+        return applicationService.findAll();
     }
 
     @Override
     public List<Destination> findAllDestinations() {
-        return destinationRepository.findAll();
+        return destinationService.findAll();
     }
 
     @Override
     public List<CompletedRoute> findAllCompletedRoutes() {
-        return completedRouteRepository.findAll();
+        return completedRouteService.findAll();
     }
 
     @Override
     public void saveCars(List<Car> cars) {
-        carRepository.saveAll(cars);
+        carService.saveMany(cars);
     }
 
     @Override
     public void saveRoutes(List<Route> routes) {
-        routeRepository.saveAll(routes);
+        routeService.saveMany(routes);
     }
 
     @Override
     public void saveDrivers(List<Driver> drivers) {
-        driverRepository.saveAll(drivers);
+        driverService.saveMany(drivers);
     }
 
     @Override
     public void saveCargoTypes(List<CargoType> cargoTypes) {
-        cargoTypeRepository.saveAll(cargoTypes);
+        cargoTypeService.saveMany(cargoTypes);
     }
 
     @Override
     public void saveApplications(List<Application> applications) {
-        applicationRepository.saveAll(applications);
+        applicationService.saveMany(applications);
     }
 
     @Override
     public void saveDestinations(List<Destination> destinations) {
-        destinationRepository.saveAll(destinations);
+        destinationService.saveMany(destinations);
     }
 
     @Override
     public void saveCompletedRoutes(List<CompletedRoute> completedRoutes) {
-        completedRouteRepository.saveAll(completedRoutes);
+        completedRouteService.saveMany(completedRoutes);
     }
 
     @Override
-    public void saveUsersAndApplyDriverRole(List<User> users) {
-        final String ROLE = "ROLE_DRIVER";
-        List<UserRole> userRoleList = new ArrayList<>();
-        List<User> savedUsers = userRepository.saveAll(users);
-        Role savedRole = roleRepository.save(Role.builder().title(ROLE).build());
-
-        savedUsers.forEach((savedUser) -> userRoleList.add(UserRole.builder().user(savedUser).role(savedRole).build()));
-
-        userRoleRepository.saveAll(userRoleList);
+    public List<UserRole> saveUsersAndApplyRole(List<User> users, String role) {
+        return userRoleService.saveUsersAndApplyRole(users, role);
     }
 
-    private void executeCreateOrDropQuery(String path) {
-        txtFileReader.setFileName(path);
-
-        try {
-            StringBuilder builder = new StringBuilder();
-            List<String> fileData = txtFileReader.readFile();
-
-            for (String line : fileData) {
-                builder.append(line).append("\n");
-            }
-
-            jdbcTemplate.update(builder.toString());
-        }
-        catch (IOException | DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+    @Override
+    public User saveUserAndApplyRole(User user, String role) {
+        return userRoleService.saveUserAndApplyRole(user, role);
     }
 }

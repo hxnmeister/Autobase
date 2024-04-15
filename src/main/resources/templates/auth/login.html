@@ -35,7 +35,7 @@
             <div class="alert alert-primary">
                 <p>Logins and Passwords:</p>
                 <ul>
-                    <li th:each="user : ${users}" th:utext="${user.login} + ': ' + ${user.password} + ' (123)'"></li>
+                    <li th:each="user : ${users}" th:utext="${user.login} + ': ' + ${user.password}"></li>
                 </ul>
             </div>
         </div>

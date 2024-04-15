@@ -6,8 +6,6 @@ import java.util.List;
 
 public interface AutobaseInitService {
     void deleteAllRowsInDB();
-    void dropAllTablesInDB();
-    void createTablesInDB();
 
     List<Car> findAllCars();
     List<Route> findAllRoutes();
@@ -24,5 +22,6 @@ public interface AutobaseInitService {
     void saveApplications(List<Application> applications);
     void saveDestinations(List<Destination> destinations);
     void saveCompletedRoutes(List<CompletedRoute> completedRoutes);
-    void saveUsersAndApplyDriverRole(List<User> users);
+    List<UserRole> saveUsersAndApplyRole(List<User> users, String role);
+    User saveUserAndApplyRole(User user, String role);
 }

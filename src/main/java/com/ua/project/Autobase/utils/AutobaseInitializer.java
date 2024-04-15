@@ -21,7 +21,7 @@ public class AutobaseInitializer {
             autobaseDbInitializer.createRandomApplications();
             autobaseDbInitializer.createRandomDrivers();
             autobaseDbInitializer.createRandomDestinations();
-            autobaseDbInitializer.addDriversAccounts();
+            autobaseDbInitializer.addUsersAccounts();
 //            autobaseDbInitializer.createRandomRoutes();
 //            autobaseDbInitializer.createRandomCompletedRoutes();
         }

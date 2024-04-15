@@ -18,13 +18,15 @@ public class AppStarter {
     private final AutobaseInitializer autobaseInitializer;
     private final DaySimulationService daySimulationService;
 
+    private static final long DAY_LENGTH_IN_MILLIS = 5000;
+
     @Bean
     public ApplicationRunner init() {
         log.debug("Application is started!");
 
         return args -> {
             autobaseInitializer.autobaseInitialize();
-            daySimulationService.startDaySimulation();
+            daySimulationService.startDaySimulation(DAY_LENGTH_IN_MILLIS);
         };
     }
 }

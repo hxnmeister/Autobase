@@ -92,8 +92,6 @@ public class AutobaseDbInitializer {
 
     public void createRandomDrivers() throws IOException {
         final int COUNT_OF_ITEMS_IN_LIST = 6;
-        final double MIN_ACCEPTABLE_EXPERIENCE = 3;
-        final BigDecimal MIN_ACCEPTABLE_EARNINGS = BigDecimal.valueOf(50.0);
         List<Driver> drivers = new ArrayList<>();
         txtFileReader.setFileName(pathToFirstNames);
         List<String> firstNames = txtFileReader.readFile();
@@ -130,69 +128,23 @@ public class AutobaseDbInitializer {
         autobaseInitService.saveDestinations(destinations);
     }
 
-    public void addDriversAccounts() {
+    public void addUsersAccounts() {
         List<User> users = new ArrayList<>();
         final List<Driver> drivers = autobaseInitService.findAllDrivers();
-        final String TEMP_PASSWORD = "$2a$12$euyIGeZjFOsnbadO0Xdn0uJf2.aEhOtc73yjqOrQyFcxKUhjsJesu"; //123
+        final String DRIVER_PASSWORD = "$2a$12$euyIGeZjFOsnbadO0Xdn0uJf2.aEhOtc73yjqOrQyFcxKUhjsJesu"; //123
+        final String DISPATCH_PASSWORD = "$2a$12$x20uk6gzyLwRljFizXk5MON0iy0ubz8ik457rww1ofgqSo4vCkYDy"; //dispatch
+        final String ADMIN_PASSWORD = "$2a$12$I4panRTxkHQlV/z4AEukweTXYqMkp3vh/VSA7i4MmurSmnGZiNrVm"; //admin
 
         drivers.forEach((driver) -> users.add(User.builder()
                 .login(driver.getFirstName().toLowerCase() +
                         "_" + driver.getLastName().toLowerCase() +
                         driver.getId())
-                .password(TEMP_PASSWORD)
+                .password(DRIVER_PASSWORD)
                 .enabled(true)
                 .build()));
 
-        autobaseInitService.saveUsersAndApplyDriverRole(users);
+        autobaseInitService.saveUsersAndApplyRole(users, "ROLE_DRIVER");
+        autobaseInitService.saveUserAndApplyRole(User.builder().login("super_dispatch").password(DISPATCH_PASSWORD).enabled(true).build(), "ROLE_DISPATCH");
+        autobaseInitService.saveUserAndApplyRole(User.builder().login("admin").password(ADMIN_PASSWORD).enabled(true).build(), "ROLE_DISPATCH");
     }
-
-//    public void createRandomRoutes() {
-//        final int COUNT_OF_ITEMS_IN_LIST = 6;
-//        List<Application> applications = autobaseInitService.findAllApplications();
-//        List<Driver> drivers = autobaseInitService.findAllDrivers();
-//        List<Car> cars = autobaseInitService.findAllCars();
-//        List<Route> routes = new ArrayList<>();
-//
-//        for (int i = 0; i < COUNT_OF_ITEMS_IN_LIST; i++) {
-//            routes.add(Route
-//                    .builder()
-//                    .application(applications.get(RANDOM.nextInt(applications.size())))
-//                    .driver(drivers.get(RANDOM.nextInt(drivers.size())))
-//                    .car(cars.get(RANDOM.nextInt(cars.size())))
-//                    .build());
-//        }
-//
-//        autobaseInitService.saveRoutes(routes);
-//    }
-//
-//    public void createRandomCompletedRoutes() {
-//        final int COUNT_OF_ITEMS_IN_LIST = 6;
-//        Calendar calendar = new GregorianCalendar();
-//        List<Route> routes = autobaseInitService.findAllRoutes();
-//        List<CompletedRoute> completedRoutes = new ArrayList<>();
-//
-//        for (int i = 0; i < COUNT_OF_ITEMS_IN_LIST; i++) {
-//            java.sql.Date beginDate = getRandomDate(calendar);
-//            java.sql.Date endDate = new java.sql.Date(beginDate.getTime());
-//            endDate.setTime(endDate.getTime() + (Math.max(RANDOM.nextInt(30), 10) * 24L * 3600L * 1000L));
-//
-//            completedRoutes.add(CompletedRoute
-//                    .builder()
-//                    .beginDate(beginDate)
-//                    .endDate(endDate)
-//                    .route(routes.get(RANDOM.nextInt(routes.size())))
-//                    .build());
-//        }
-//
-//        autobaseInitService.saveCompletedRoutes(completedRoutes);
-//    }
-
-//    private java.sql.Date getRandomDate(Calendar calendar) {
-//        final int DAYS_IN_YEAR = 365;
-//        Calendar randomDate = (Calendar) calendar.clone();
-//
-//        randomDate.add(Calendar.DAY_OF_YEAR, -AutobaseDbInitializer.RANDOM.nextInt(DAYS_IN_YEAR));
-//
-//        return new java.sql.Date(randomDate.getTimeInMillis());
-//    }
 }
