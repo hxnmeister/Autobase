@@ -111,7 +111,7 @@ public class AutobaseInitServiceImp implements AutobaseInitService {
     }
 
     @Override
-    public User saveUserAndApplyRole(User user, String role) {
+    public UserRole saveUserAndApplyRole(User user, String role) {
         return userRoleService.saveUserAndApplyRole(user, role);
     }
 }

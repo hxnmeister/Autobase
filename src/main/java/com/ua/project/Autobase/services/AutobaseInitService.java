@@ -23,5 +23,5 @@ public interface AutobaseInitService {
     void saveDestinations(List<Destination> destinations);
     void saveCompletedRoutes(List<CompletedRoute> completedRoutes);
     List<UserRole> saveUsersAndApplyRole(List<User> users, String role);
-    User saveUserAndApplyRole(User user, String role);
+    UserRole saveUserAndApplyRole(User user, String role);
 }

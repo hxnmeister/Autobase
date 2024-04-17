@@ -68,10 +68,10 @@ public class UserRoleServiceImp implements UserRoleService {
     }
 
     @Override
-    public User saveUserAndApplyRole(User user, String role) {
+    public UserRole saveUserAndApplyRole(User user, String role) {
         User savedUser = userRepository.save(user);
         Role savedRole = roleRepository.save(Role.builder().title(role).build());
 
-        userRoleRepository.save(UserRole.builder().user(savedUser).role(savedRole).build());
+        return userRoleRepository.save(UserRole.builder().user(savedUser).role(savedRole).build());
     }
 }

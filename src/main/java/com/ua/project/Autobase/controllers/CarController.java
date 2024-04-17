@@ -26,7 +26,6 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class CarController {
     private final RouteService routeService;
-    private final DriverService driverService;
     private final CarService carService;
 
     @GetMapping(value = "/cars")
@@ -41,22 +40,27 @@ public class CarController {
 
     @GetMapping(value = "/cars/get-all")
     public String getAll(Model model, Principal principal) {
-        try {
-            Long driverId = Long.parseLong(principal.getName().replaceAll("[^0-9]", ""));
-            Car currentDriverCar = routeService.findDriversCar(driverId);
-
+        if (principal.getName().equalsIgnoreCase("admin") || principal.getName().toLowerCase().contains("dispatch")) {
             model.addAttribute("cars", carService.findAll());
-            model.addAttribute("currentDriverCar", currentDriverCar);
         }
-        catch (NumberFormatException e) {
-            model.addAttribute("error", "Incorrect driver ID!");
-            log.warn(e.getMessage());
-            return "/cars/index";
-        }
-        catch (RuntimeException e) {
-            model.addAttribute("error", e.getMessage());
-            log.warn(e.getMessage());
-            return "/cars/index";
+        else {
+            try {
+                Long driverId = Long.parseLong(principal.getName().replaceAll("[^0-9]", ""));
+                Car currentDriverCar = routeService.findDriversCar(driverId);
+
+                model.addAttribute("cars", carService.findAll());
+                model.addAttribute("currentDriverCar", currentDriverCar);
+            }
+            catch (NumberFormatException e) {
+                model.addAttribute("error", "Incorrect driver ID!");
+                log.warn(e.getMessage());
+                return "/cars/index";
+            }
+            catch (RuntimeException e) {
+                model.addAttribute("error", e.getMessage());
+                log.warn(e.getMessage());
+                return "/cars/index";
+            }
         }
 
         return "cars/display";

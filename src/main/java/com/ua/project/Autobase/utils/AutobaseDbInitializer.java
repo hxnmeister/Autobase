@@ -43,7 +43,7 @@ public class AutobaseDbInitializer {
             cargoTypes.add(CargoType
                     .builder()
                     .title("CargoTypeTitle" + (ThreadLocalRandom.current().nextInt(1, MAX_RANDOM_NUMBER)))
-                    .costPerKG(new BigDecimal(Double.toString(ThreadLocalRandom.current().nextDouble(50, 100)).replace(',', '.')))
+                    .costPerKG(new BigDecimal(Double.toString(ThreadLocalRandom.current().nextDouble(5, 10)).replace(',', '.')))
                     .requiredExperience(ThreadLocalRandom.current().nextDouble(3, 20))
                     .build());
         }
@@ -145,6 +145,6 @@ public class AutobaseDbInitializer {
 
         autobaseInitService.saveUsersAndApplyRole(users, "ROLE_DRIVER");
         autobaseInitService.saveUserAndApplyRole(User.builder().login("super_dispatch").password(DISPATCH_PASSWORD).enabled(true).build(), "ROLE_DISPATCH");
-        autobaseInitService.saveUserAndApplyRole(User.builder().login("admin").password(ADMIN_PASSWORD).enabled(true).build(), "ROLE_DISPATCH");
+        autobaseInitService.saveUserAndApplyRole(User.builder().login("admin").password(ADMIN_PASSWORD).enabled(true).build(), "ROLE_ADMIN");
     }
 }

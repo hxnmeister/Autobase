@@ -44,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/cars/get-all",
                 "/drivers/get-all",
                 "/routes/get-all",
-                "/applications/get-all").access("hasAnyRole('ROLE_DRIVER')");
+                "/applications/get-all").access("hasAnyRole('ROLE_DRIVER', 'ROLE_ADMIN', 'ROLE_DISPATCHER')");
 
         httpSecurity.authorizeRequests().and().exceptionHandling().authenticationEntryPoint(myBasicAuthenticationEntryPoint);
 

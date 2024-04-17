@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 public class AppStarter {
     private final AutobaseInitializer autobaseInitializer;
     private final DaySimulationService daySimulationService;
+    private final RouteService routeService;
 
     private static final long DAY_LENGTH_IN_MILLIS = 5000;
 
@@ -26,7 +27,8 @@ public class AppStarter {
 
         return args -> {
             autobaseInitializer.autobaseInitialize();
-            daySimulationService.startDaySimulation(DAY_LENGTH_IN_MILLIS);
+            routeService.setRoutes();
+//            daySimulationService.startDaySimulation(DAY_LENGTH_IN_MILLIS);
         };
     }
 }

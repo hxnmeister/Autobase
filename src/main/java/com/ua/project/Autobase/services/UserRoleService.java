@@ -11,5 +11,5 @@ public interface UserRoleService extends CRUDInterface<UserRole> {
 
     List<UserRole> saveUsersAndApplyRole(List<User> users, String role);
 
-    User saveUserAndApplyRole(User user, String role);
+    UserRole saveUserAndApplyRole(User user, String role);
 }
